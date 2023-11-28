@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package kifi.users;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "family.proto";
+
+
+
+
+message User {
+  string id = 1;
+  string Username = 2;
+  string FirstName = 3;
+  string LastName = 4;
+  string MiddleName = 5;
+  bool IsOwner = 6;
+  string Location = 7;
+  kifi.users.Member person = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  google.protobuf.Timestamp updatedAt = 10;
+}
+
+
+message UserListRequests {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+
+message UserListResponse {
+  repeated User users = 1;
+}
+
+message UserCreateRequest {
+  string Username = 1;
+  string FirstName = 2;
+  string LastName = 3;
+  string MiddleName = 4;
+  bool IsOwner = 5;
+  string Location = 6;
+}
+
+message UserCreateResponse {
+  User user = 1;
+}
+
+message UserUpdateRequest {
+  string id = 1;
+  string Username = 2;
+  string FirstName = 3;
+  string LastName = 4;
+  string MiddleName = 5;
+  bool IsOwner = 6;
+  string Location = 7;
+}
+
+message UserUpdateResponse {
+  User user = 1;
+}
+
+message UserDeleteRequest {
+  string id = 1;
+}
+
+message UserDeleteResponse {
+  bool isDeleted = 1;
+}
+
+message UserGetRequest {
+  string id = 1;
+}
+
+message UserGetResponse {
+  User user = 1;
+}
+
+
+
+message FamilyCreateRequest{
+  kifi.users.Member member = 1;
+  string Name = 2;
+}
+
+message FamilyCreateResponse{
+  kifi.users.Family family = 1;
+}
+
+message FamilyAssignMemberRequest{
+  string familyID = 1;
+  kifi.users.Member member = 2;
+}
+
+message FamilyAssignMemberResponse{
+  bool isAssigned = 1;
+}
+
+
+service Users {
+  rpc Create(UserCreateRequest) returns (UserCreateResponse);
+  rpc Update(UserUpdateRequest) returns (UserUpdateResponse);
+  rpc Delete(UserDeleteRequest) returns (UserDeleteResponse);
+  rpc Get(UserGetRequest) returns (UserGetResponse);
+  rpc List(UserListRequests) returns (UserListResponse);
+  rpc CreateFamily(FamilyCreateRequest) returns (FamilyCreateResponse);
+  rpc AssignMember(FamilyAssignMemberRequest) returns (FamilyAssignMemberResponse);
+  rpc Health(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+
+
+
+
