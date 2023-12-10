@@ -1,75 +1,77 @@
 package jwt
 
-import "github.com/google/uuid"
-import "github.com/golang-jwt/jwt/v5"
+import (
+	"fmt"
+	"github.com/google/uuid"
+	"time"
+)
+import jwtgo "github.com/golang-jwt/jwt/v5"
 
 // JWT interface for JWTImpl
 type JWT interface {
 	GenerateToken(username string, userID int64) (string, error)
-	ValidateToken() (string, error)
+	ValidateToken(token string) (CustomClaims, error)
 }
 
 // Implement the JWT interface here
 type JWTImpl struct {
 	publicKey  string
 	privateKey string
+	secret     []byte
 }
 
 // NewJWT returns a new JWTImpl
-func NewJWT() JWT {
-	return &JWTImpl{publicKey: "", privateKey: ""}
+func NewJWT(secret string) JWT {
+	secretByes := []byte(secret)
+	return &JWTImpl{publicKey: "", privateKey: "", secret: secretByes}
 }
 
 type CustomClaims struct {
 	Username  string `json:"username"`
 	UserID    int64  `json:"user_id"`
 	TokenUUID string `json:"token_uuid"`
-}
-
-func (c CustomClaims) GetExpirationTime() (*jwt.NumericDate, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CustomClaims) GetIssuedAt() (*jwt.NumericDate, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CustomClaims) GetNotBefore() (*jwt.NumericDate, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CustomClaims) GetIssuer() (string, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CustomClaims) GetSubject() (string, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CustomClaims) GetAudience() (jwt.ClaimStrings, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CustomClaims) Valid() error {
-	return nil
+	jwtgo.RegisteredClaims
 }
 
 // JWT implementation, which generate a token and validate with customClaims
 func (j *JWTImpl) GenerateToken(username string, userID int64) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, CustomClaims{
+	tokenUID := uuid.New().String()
+	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, CustomClaims{
 		Username:  username,
 		UserID:    userID,
-		TokenUUID: uuid.New().String(),
+		TokenUUID: tokenUID,
+		RegisteredClaims: jwtgo.RegisteredClaims{
+			ExpiresAt: jwtgo.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),
+			Issuer:    "kifiApp",
+			IssuedAt:  jwtgo.NewNumericDate(time.Now()),
+			NotBefore: jwtgo.NewNumericDate(time.Now()),
+			Subject:   "auth",
+			Audience:  jwtgo.ClaimStrings{"kifiApp"},
+			ID:        tokenUID,
+		},
 	})
-	return token.Raw, nil
+	s, err := token.SignedString(j.secret)
+	if err != nil {
+		return "", err
+	}
+	return s, nil
 }
 
-func (j *JWTImpl) ValidateToken() (string, error) {
-	return "", nil
+func (j *JWTImpl) ValidateToken(token string) (CustomClaims, error) {
+	t, err := jwtgo.ParseWithClaims(token, &CustomClaims{}, func(token *jwtgo.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwtgo.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return j.secret, nil
+	})
+	if err != nil {
+		return CustomClaims{}, err
+	}
+	if claims, ok := t.Claims.(*CustomClaims); ok && t.Valid {
+		return *claims, nil
+	} else {
+		return CustomClaims{}, fmt.Errorf("Invalid token")
+	}
+
 }

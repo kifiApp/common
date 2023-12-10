@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option go_package = "github.com/kifiApp/common/gen;gen";
+
 package kifi.users;
 
 enum Role {
