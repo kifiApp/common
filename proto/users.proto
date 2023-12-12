@@ -13,7 +13,7 @@ import "family.proto";
 
 
 message User {
-  string id = 1;
+  int64 id = 1;
   string Username = 2;
   string FirstName = 3;
   string LastName = 4;
@@ -46,7 +46,7 @@ message UserCreateRequest {
 }
 
 message UserCreateResponse {
-  User user = 1;
+  int64 user = 1;
 }
 
 message UserUpdateRequest {
@@ -82,7 +82,7 @@ message UserGetResponse {
 
 
 message FamilyCreateRequest{
-  kifi.users.Member member = 1;
+  User owner = 1;
   string Name = 2;
 }
 
