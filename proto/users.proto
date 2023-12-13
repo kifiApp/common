@@ -104,7 +104,7 @@ message FamilyCreateResponse{
 }
 
 message FamilyAssignMemberRequest{
-  string familyID = 1;
+  int64 familyID = 1;
   kifi.users.Member member = 2;
 }
 
@@ -113,7 +113,7 @@ message FamilyAssignMemberResponse{
 }
 
 message FamilyMembersRequest{
-  string familyID = 1;
+  int64 familyID = 1;
 }
 
 message FamilyMembersResponse{
