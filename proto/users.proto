@@ -10,7 +10,20 @@ import "google/protobuf/empty.proto";
 import "family.proto";
 
 
+message Family {
+  int64 id = 1;
+  string name = 2;
+  repeated kifi.users.Member members = 3;
+}
 
+message Member {
+  int64 id = 1;
+  kifi.users.User user = 2;
+  int64 familyID = 3;
+  kifi.users.Family family = 4;
+  kifi.users.Role role = 5;
+  repeated kifi.users.Permission permission = 6;
+}
 
 message User {
   int64 id = 1;
@@ -33,7 +46,7 @@ message UserListRequests {
 
 
 message UserListResponse {
-  repeated User users = 1;
+  repeated kifi.users.User users = 1;
 }
 
 message UserCreateRequest {
@@ -60,7 +73,7 @@ message UserUpdateRequest {
 }
 
 message UserUpdateResponse {
-  User user = 1;
+  kifi.users.User user = 1;
 }
 
 message UserDeleteRequest {
@@ -76,13 +89,13 @@ message UserGetRequest {
 }
 
 message UserGetResponse {
-  User user = 1;
+  kifi.users.User user = 1;
 }
 
 
 
 message FamilyCreateRequest{
-  User owner = 1;
+  kifi.users.User owner = 1;
   string Name = 2;
 }
 
@@ -97,6 +110,14 @@ message FamilyAssignMemberRequest{
 
 message FamilyAssignMemberResponse{
   bool isAssigned = 1;
+}
+
+message FamilyMembersRequest{
+  string familyID = 1;
+}
+
+message FamilyMembersResponse{
+  repeated kifi.users.Member members = 1;
 }
 
 
