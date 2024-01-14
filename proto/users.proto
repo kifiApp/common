@@ -63,8 +63,7 @@ message UserCreateResponse {
 }
 
 message UserUpdateRequest {
-  string id = 1;
-  string Username = 2;
+  int64 id = 1;
   string FirstName = 3;
   string LastName = 4;
   string MiddleName = 5;
