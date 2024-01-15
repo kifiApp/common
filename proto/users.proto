@@ -142,8 +142,9 @@ message FamilyMembersResponse{
 
 
 service Users {
-  rpc Create(UserSignupRequest) returns (UserSignupResponse);
+  rpc Signup(UserSignupRequest) returns (UserSignupResponse);
   rpc Login(UserLoginRequest) returns (UserLoginResponse);
+  rpc Auth(AuthRequest) returns (AuthResponse);
   rpc Update(UserUpdateRequest) returns (UserUpdateResponse);
   rpc Delete(UserDeleteRequest) returns (UserDeleteResponse);
   rpc Get(UserGetRequest) returns (UserGetResponse);
