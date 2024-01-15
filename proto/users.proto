@@ -49,18 +49,39 @@ message UserListResponse {
   repeated kifi.users.User users = 1;
 }
 
-message UserCreateRequest {
+message UserSignupRequest {
   string Username = 1;
   string FirstName = 2;
   string LastName = 3;
   string MiddleName = 4;
   bool IsOwner = 5;
   string Location = 6;
+  string phoneNumber = 7;
+  bytes password = 8;
 }
 
-message UserCreateResponse {
+message UserSignupResponse {
   int64 user = 1;
 }
+
+message UserLoginRequest {
+  string Username = 1;
+  bytes password = 2;
+}
+
+message UserLoginResponse {
+  string token = 1;
+  kifi.users.User user = 2;
+}
+
+message AuthRequest {
+  string token = 1;
+}
+
+message AuthResponse {
+  int64 userID = 1;
+}
+
 
 message UserUpdateRequest {
   int64 id = 1;
@@ -121,7 +142,8 @@ message FamilyMembersResponse{
 
 
 service Users {
-  rpc Create(UserCreateRequest) returns (UserCreateResponse);
+  rpc Create(UserSignupRequest) returns (UserSignupResponse);
+  rpc Login(UserLoginRequest) returns (UserLoginResponse);
   rpc Update(UserUpdateRequest) returns (UserUpdateResponse);
   rpc Delete(UserDeleteRequest) returns (UserDeleteResponse);
   rpc Get(UserGetRequest) returns (UserGetResponse);

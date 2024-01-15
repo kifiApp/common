@@ -4,7 +4,7 @@ option go_package = "github.com/kifiApp/common/gen;gen";
 
 package kifi.accounts;
 
-import "users.proto";
+
 
 message UserWallet {
   int64 id = 1;

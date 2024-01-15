@@ -23,7 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersClient interface {
-	Create(ctx context.Context, in *UserCreateRequest, opts ...grpc.CallOption) (*UserCreateResponse, error)
+	Create(ctx context.Context, in *UserSignupRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
+	Login(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error)
 	Update(ctx context.Context, in *UserUpdateRequest, opts ...grpc.CallOption) (*UserUpdateResponse, error)
 	Delete(ctx context.Context, in *UserDeleteRequest, opts ...grpc.CallOption) (*UserDeleteResponse, error)
 	Get(ctx context.Context, in *UserGetRequest, opts ...grpc.CallOption) (*UserGetResponse, error)
@@ -41,9 +42,18 @@ func NewUsersClient(cc grpc.ClientConnInterface) UsersClient {
 	return &usersClient{cc}
 }
 
-func (c *usersClient) Create(ctx context.Context, in *UserCreateRequest, opts ...grpc.CallOption) (*UserCreateResponse, error) {
-	out := new(UserCreateResponse)
+func (c *usersClient) Create(ctx context.Context, in *UserSignupRequest, opts ...grpc.CallOption) (*UserSignupResponse, error) {
+	out := new(UserSignupResponse)
 	err := c.cc.Invoke(ctx, "/kifi.users.Users/Create", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) Login(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error) {
+	out := new(UserLoginResponse)
+	err := c.cc.Invoke(ctx, "/kifi.users.Users/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +127,8 @@ func (c *usersClient) Health(ctx context.Context, in *emptypb.Empty, opts ...grp
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility
 type UsersServer interface {
-	Create(context.Context, *UserCreateRequest) (*UserCreateResponse, error)
+	Create(context.Context, *UserSignupRequest) (*UserSignupResponse, error)
+	Login(context.Context, *UserLoginRequest) (*UserLoginResponse, error)
 	Update(context.Context, *UserUpdateRequest) (*UserUpdateResponse, error)
 	Delete(context.Context, *UserDeleteRequest) (*UserDeleteResponse, error)
 	Get(context.Context, *UserGetRequest) (*UserGetResponse, error)
@@ -132,8 +143,11 @@ type UsersServer interface {
 type UnimplementedUsersServer struct {
 }
 
-func (UnimplementedUsersServer) Create(context.Context, *UserCreateRequest) (*UserCreateResponse, error) {
+func (UnimplementedUsersServer) Create(context.Context, *UserSignupRequest) (*UserSignupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedUsersServer) Login(context.Context, *UserLoginRequest) (*UserLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedUsersServer) Update(context.Context, *UserUpdateRequest) (*UserUpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -170,7 +184,7 @@ func RegisterUsersServer(s grpc.ServiceRegistrar, srv UsersServer) {
 }
 
 func _Users_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserCreateRequest)
+	in := new(UserSignupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -182,7 +196,25 @@ func _Users_Create_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/kifi.users.Users/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServer).Create(ctx, req.(*UserCreateRequest))
+		return srv.(UsersServer).Create(ctx, req.(*UserSignupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.users.Users/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).Login(ctx, req.(*UserLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -323,6 +355,10 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _Users_Create_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _Users_Login_Handler,
 		},
 		{
 			MethodName: "Update",

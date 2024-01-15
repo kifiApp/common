@@ -21,7 +21,7 @@ else
 endif
 
 generate:
-	protoc -I${PROTO_DIR} --go_opt=module=${PACKAGE} --go-grpc_opt=module=${PACKAGE} --go_out=./gen --go-grpc_out=./gen ${PROTO_DIR}/*.proto
+	protoc protoc -Iproto --go_opt=module=github.com/kifiApp/common --go-grpc_opt=module=github.com/kifiApp/common  --go_out=./gen --go-grpc_out=./gen proto/*.proto
 
 modsync: generate
 	go get -u ./...
