@@ -18,7 +18,7 @@ message UserDevice{
 
 message GetUserDevicesRequest{
   int64 userID = 1;
-  int64 deviceID = 2;
+  string deviceID = 2;
 }
 
 message UpdateUserDeviceRequest{
