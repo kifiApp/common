@@ -153,9 +153,9 @@ service Users {
   rpc CreateFamily(FamilyCreateRequest) returns (FamilyCreateResponse);
   rpc AssignMember(FamilyAssignMemberRequest) returns (FamilyAssignMemberResponse);
   rpc Health(google.protobuf.Empty) returns (google.protobuf.Empty);
-  rpc RegisterDevice(kifi.device.UserDevice) returns (kifi.device.UserDevice);
-  rpc GetUserDevice(kifi.device.GetUserDevicesRequest) returns (kifi.device.UserDevice);
-  rpc UpdateUserDevice(kifi.device.UpdateUserDeviceRequest) returns (kifi.device.UserDevice);
+  rpc RegisterDevice(UserDevice) returns (UserDevice);
+  rpc GetUserDevice(GetUserDevicesRequest) returns (UserDevice);
+  rpc UpdateUserDevice(UpdateUserDeviceRequest) returns (UserDevice);
 }
 
 
