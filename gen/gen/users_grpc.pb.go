@@ -33,6 +33,9 @@ type UsersClient interface {
 	CreateFamily(ctx context.Context, in *FamilyCreateRequest, opts ...grpc.CallOption) (*FamilyCreateResponse, error)
 	AssignMember(ctx context.Context, in *FamilyAssignMemberRequest, opts ...grpc.CallOption) (*FamilyAssignMemberResponse, error)
 	Health(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RegisterDevice(ctx context.Context, in *UserDevice, opts ...grpc.CallOption) (*UserDevice, error)
+	GetUserDevice(ctx context.Context, in *GetUserDevicesRequest, opts ...grpc.CallOption) (*UserDevice, error)
+	UpdateUserDevice(ctx context.Context, in *UpdateUserDeviceRequest, opts ...grpc.CallOption) (*UserDevice, error)
 }
 
 type usersClient struct {
@@ -133,6 +136,33 @@ func (c *usersClient) Health(ctx context.Context, in *emptypb.Empty, opts ...grp
 	return out, nil
 }
 
+func (c *usersClient) RegisterDevice(ctx context.Context, in *UserDevice, opts ...grpc.CallOption) (*UserDevice, error) {
+	out := new(UserDevice)
+	err := c.cc.Invoke(ctx, "/kifi.users.Users/RegisterDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) GetUserDevice(ctx context.Context, in *GetUserDevicesRequest, opts ...grpc.CallOption) (*UserDevice, error) {
+	out := new(UserDevice)
+	err := c.cc.Invoke(ctx, "/kifi.users.Users/GetUserDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) UpdateUserDevice(ctx context.Context, in *UpdateUserDeviceRequest, opts ...grpc.CallOption) (*UserDevice, error) {
+	out := new(UserDevice)
+	err := c.cc.Invoke(ctx, "/kifi.users.Users/UpdateUserDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServer is the server API for Users service.
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility
@@ -147,6 +177,9 @@ type UsersServer interface {
 	CreateFamily(context.Context, *FamilyCreateRequest) (*FamilyCreateResponse, error)
 	AssignMember(context.Context, *FamilyAssignMemberRequest) (*FamilyAssignMemberResponse, error)
 	Health(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	RegisterDevice(context.Context, *UserDevice) (*UserDevice, error)
+	GetUserDevice(context.Context, *GetUserDevicesRequest) (*UserDevice, error)
+	UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*UserDevice, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -183,6 +216,15 @@ func (UnimplementedUsersServer) AssignMember(context.Context, *FamilyAssignMembe
 }
 func (UnimplementedUsersServer) Health(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Health not implemented")
+}
+func (UnimplementedUsersServer) RegisterDevice(context.Context, *UserDevice) (*UserDevice, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterDevice not implemented")
+}
+func (UnimplementedUsersServer) GetUserDevice(context.Context, *GetUserDevicesRequest) (*UserDevice, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserDevice not implemented")
+}
+func (UnimplementedUsersServer) UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*UserDevice, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserDevice not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 
@@ -377,6 +419,60 @@ func _Users_Health_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Users_RegisterDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserDevice)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).RegisterDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.users.Users/RegisterDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).RegisterDevice(ctx, req.(*UserDevice))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_GetUserDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserDevicesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).GetUserDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.users.Users/GetUserDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).GetUserDevice(ctx, req.(*GetUserDevicesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_UpdateUserDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).UpdateUserDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.users.Users/UpdateUserDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).UpdateUserDevice(ctx, req.(*UpdateUserDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Users_ServiceDesc is the grpc.ServiceDesc for Users service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -423,6 +519,18 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Health",
 			Handler:    _Users_Health_Handler,
+		},
+		{
+			MethodName: "RegisterDevice",
+			Handler:    _Users_RegisterDevice_Handler,
+		},
+		{
+			MethodName: "GetUserDevice",
+			Handler:    _Users_GetUserDevice_Handler,
+		},
+		{
+			MethodName: "UpdateUserDevice",
+			Handler:    _Users_UpdateUserDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
