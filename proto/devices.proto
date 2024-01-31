@@ -22,11 +22,13 @@ message GetUserDevicesRequest{
 }
 
 message UpdateUserDeviceRequest{
-  int64 userID = 1;
-  string platform = 2;
-  string systemName = 3;
-  string systemVersion = 4;
-  string brand = 5;
+  int64 id = 1;
+  string  deviceID = 2;
+  int64 userID = 3;
+  string platform = 4;
+  string systemName = 5;
+  string systemVersion = 6;
+  string brand = 7;
 }
 
 
