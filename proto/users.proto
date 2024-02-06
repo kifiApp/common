@@ -59,6 +59,7 @@ message UserSignupRequest {
   string Location = 6;
   string phoneNumber = 7;
   bytes password = 8;
+  string DeviceID = 9;
 }
 
 message UserSignupResponse {
