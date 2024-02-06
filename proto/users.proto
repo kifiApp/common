@@ -27,14 +27,14 @@ message Member {
 }
 
 message User {
-  int64 id = 1;
+  int64 Id = 1;
   string Username = 2;
   string FirstName = 3;
   string LastName = 4;
   string MiddleName = 5;
   bool IsOwner = 6;
   string Location = 7;
-  kifi.users.Member person = 8;
+  kifi.users.Member Person = 8;
   google.protobuf.Timestamp createdAt = 9;
   google.protobuf.Timestamp updatedAt = 10;
 }

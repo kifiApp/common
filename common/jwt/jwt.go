@@ -10,6 +10,7 @@ import jwtgo "github.com/golang-jwt/jwt/v5"
 // JWT interface for JWTImpl
 type JWT interface {
 	GenerateToken(username string, userID int64) (string, error)
+	GenerateRefreshToken(userID int64, tokenUID string) (string, error)
 	ValidateToken(token string) (CustomClaims, error)
 }
 
@@ -41,11 +42,31 @@ func (j *JWTImpl) GenerateToken(username string, userID int64) (string, error) {
 		UserID:    userID,
 		TokenUUID: tokenUID,
 		RegisteredClaims: jwtgo.RegisteredClaims{
-			ExpiresAt: jwtgo.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),
+			ExpiresAt: jwtgo.NewNumericDate(time.Now().Add(time.Minute * 7)),
 			Issuer:    "kifiApp",
 			IssuedAt:  jwtgo.NewNumericDate(time.Now()),
 			NotBefore: jwtgo.NewNumericDate(time.Now()),
-			Subject:   "auth",
+			Subject:   "access",
+			Audience:  jwtgo.ClaimStrings{"kifiApp"},
+			ID:        tokenUID,
+		},
+	})
+	s, err := token.SignedString(j.secret)
+	if err != nil {
+		return "", err
+	}
+	return s, nil
+}
+
+func (j *JWTImpl) GenerateRefreshToken(userID int64, tokenUID string) (string, error) {
+	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, CustomClaims{
+		UserID: userID,
+		RegisteredClaims: jwtgo.RegisteredClaims{
+			ExpiresAt: jwtgo.NewNumericDate(time.Now().Add(time.Hour * 1)),
+			Issuer:    "kifiApp",
+			IssuedAt:  jwtgo.NewNumericDate(time.Now()),
+			NotBefore: jwtgo.NewNumericDate(time.Now()),
+			Subject:   "refresh",
 			Audience:  jwtgo.ClaimStrings{"kifiApp"},
 			ID:        tokenUID,
 		},
