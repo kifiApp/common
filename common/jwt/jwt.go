@@ -9,7 +9,7 @@ import jwtgo "github.com/golang-jwt/jwt/v5"
 
 // JWT interface for JWTImpl
 type JWT interface {
-	GenerateToken(username string, userID int64) (string, error)
+	GenerateToken(username string, userID int64) (string, string, error)
 	GenerateRefreshToken(userID int64, tokenUID string) (string, error)
 	ValidateToken(token string) (CustomClaims, error)
 }
@@ -35,7 +35,7 @@ type CustomClaims struct {
 }
 
 // JWT implementation, which generate a token and validate with customClaims
-func (j *JWTImpl) GenerateToken(username string, userID int64) (string, error) {
+func (j *JWTImpl) GenerateToken(username string, userID int64) (string, string, error) {
 	tokenUID := uuid.New().String()
 	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, CustomClaims{
 		Username:  username,
@@ -53,9 +53,9 @@ func (j *JWTImpl) GenerateToken(username string, userID int64) (string, error) {
 	})
 	s, err := token.SignedString(j.secret)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return s, nil
+	return s, tokenUID, nil
 }
 
 func (j *JWTImpl) GenerateRefreshToken(userID int64, tokenUID string) (string, error) {
