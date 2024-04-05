@@ -52,14 +52,15 @@ message UserListResponse {
 
 message UserSignupRequest {
   string Username = 1;
-  string FirstName = 2;
-  string LastName = 3;
-  string MiddleName = 4;
-  bool IsOwner = 5;
-  string Location = 6;
-  string phoneNumber = 7;
-  bytes password = 8;
-  string DeviceID = 9;
+  string Name = 2;
+  string FirstName = 3;
+  string LastName = 4;
+  string MiddleName = 5;
+  bool IsOwner = 6;
+  string Location = 7;
+  string phoneNumber = 8;
+  bytes password = 9;
+  string DeviceID = 10;
 }
 
 message UserSignupResponse {

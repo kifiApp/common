@@ -20,8 +20,20 @@ else
 	BIN = proto-go-course
 endif
 
-generate:
-	 protoc -Iproto --go_opt=module=github.com/kifiApp/common --go-grpc_opt=module=github.com/kifiApp/common  --go_out=./gen --go-grpc_out=./gen proto/*.proto
+install-protoc:
+ifeq (, $(shell which protoc))
+	@{ \
+	set -e ;\
+	PROTOC_ZIP=protoc-3.7.1-osx-x86_64.zip ;\
+	curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/$$PROTOC_ZIP ;\
+	unzip -o $$PROTOC_ZIP -d /usr/local bin/protoc ;\
+	unzip -o $$PROTOC_ZIP -d /usr/local 'include/*' ;\
+	rm -f $$PROTOC_ZIP ;\
+	}
+endif
+
+generate: install-protoc
+	protoc -Iproto --go_opt=module=github.com/kifiApp/common --go-grpc_opt=module=github.com/kifiApp/common  --go_out=./gen --go-grpc_out=./gen proto/*.proto
 
 modsync: generate
 	go get -u ./...
