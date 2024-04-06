@@ -35,7 +35,7 @@ type UsersClient interface {
 	Health(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*empty.Empty, error)
 	RegisterDevice(ctx context.Context, in *UserDevice, opts ...grpc.CallOption) (*UserDevice, error)
 	GetUserDevice(ctx context.Context, in *GetUserDevicesRequest, opts ...grpc.CallOption) (*UserDevice, error)
-	UpdateUserDevice(ctx context.Context, in *UpdateUserDeviceRequest, opts ...grpc.CallOption) (*UserDevice, error)
+	UpdateUserDevice(ctx context.Context, in *UpdateUserDeviceRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type usersClient struct {
@@ -154,8 +154,8 @@ func (c *usersClient) GetUserDevice(ctx context.Context, in *GetUserDevicesReque
 	return out, nil
 }
 
-func (c *usersClient) UpdateUserDevice(ctx context.Context, in *UpdateUserDeviceRequest, opts ...grpc.CallOption) (*UserDevice, error) {
-	out := new(UserDevice)
+func (c *usersClient) UpdateUserDevice(ctx context.Context, in *UpdateUserDeviceRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/kifi.users.Users/UpdateUserDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -179,7 +179,7 @@ type UsersServer interface {
 	Health(context.Context, *empty.Empty) (*empty.Empty, error)
 	RegisterDevice(context.Context, *UserDevice) (*UserDevice, error)
 	GetUserDevice(context.Context, *GetUserDevicesRequest) (*UserDevice, error)
-	UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*UserDevice, error)
+	UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -223,7 +223,7 @@ func (UnimplementedUsersServer) RegisterDevice(context.Context, *UserDevice) (*U
 func (UnimplementedUsersServer) GetUserDevice(context.Context, *GetUserDevicesRequest) (*UserDevice, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserDevice not implemented")
 }
-func (UnimplementedUsersServer) UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*UserDevice, error) {
+func (UnimplementedUsersServer) UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserDevice not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}

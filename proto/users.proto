@@ -34,9 +34,11 @@ message User {
   string MiddleName = 5;
   bool IsOwner = 6;
   string Location = 7;
-  kifi.users.Member Person = 8;
-  google.protobuf.Timestamp createdAt = 9;
-  google.protobuf.Timestamp updatedAt = 10;
+  string phoneNumber = 8;
+  string user_avatar = 9;
+  kifi.users.Member Person = 10;
+  google.protobuf.Timestamp createdAt = 11;
+  google.protobuf.Timestamp updatedAt = 12;
 }
 
 
@@ -98,7 +100,7 @@ message UserUpdateRequest {
 }
 
 message UserUpdateResponse {
-  kifi.users.User user = 1;
+  bool isUpdated = 1;
 }
 
 message UserDeleteRequest {
@@ -159,7 +161,7 @@ service Users {
   rpc Health(google.protobuf.Empty) returns (google.protobuf.Empty);
   rpc RegisterDevice(UserDevice) returns (UserDevice);
   rpc GetUserDevice(GetUserDevicesRequest) returns (UserDevice);
-  rpc UpdateUserDevice(UpdateUserDeviceRequest) returns (UserDevice);
+  rpc UpdateUserDevice(UpdateUserDeviceRequest) returns (google.protobuf.Empty);
 }
 
 
