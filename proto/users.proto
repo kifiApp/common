@@ -92,6 +92,7 @@ message AuthResponse {
 
 message UserUpdateRequest {
   int64 id = 1;
+  string Name = 2;
   string FirstName = 3;
   string LastName = 4;
   string MiddleName = 5;
