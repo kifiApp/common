@@ -6,6 +6,7 @@ option go_package = "github.com/kifiApp/common/gen;gen";
 package kifi.users;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 import "family.proto";
 import "devices.proto";
@@ -36,7 +37,7 @@ message User {
   bool IsOwner = 7;
   string Location = 8;
   string phoneNumber = 9;
-  string user_avatar = 10;
+  google.protobuf.StringValue user_avatar = 10;
   kifi.users.Member Person = 11;
   google.protobuf.Timestamp createdAt = 12;
   google.protobuf.Timestamp updatedAt = 13;
