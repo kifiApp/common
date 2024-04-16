@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/golang/protobuf v1.5.3
 	github.com/google/uuid v1.4.0
 	go.uber.org/zap v1.26.0
 	go.uber.org/zap/exp v0.2.0
@@ -12,7 +13,6 @@ require (
 )
 
 require (
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
