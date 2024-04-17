@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option go_package = "github.com/kifiApp/common/gen;gen";
+
+
+package kifi.goals.service.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+import "wishes.proto";
+
+
+message CreateWishRequest {
+  int64 userId = 1;
+  kifi.goals.Wish wish = 2;
+}
+
+message CreateWishResponse {
+  int64 wishID = 1;
+}
+
+message GetUserWishesRequest {
+  int64 userId = 1;
+}
+
+message GetUserWishesResponse {
+  repeated kifi.goals.Wish wishes = 1;
+}
+
+message GetWishByIDRequest {
+  int64 wishID = 1;
+}
+
+message GetFamilyWishesRequest {
+  int64 userId = 1;
+  int64 familyId = 2;
+}
+
+message GetFamilyWishesResponse {
+  int64 familyId = 1;
+  repeated kifi.goals.Wish wishes = 2;
+}
+
+
+service Goals{
+  rpc CreateWish(CreateWishRequest) returns (CreateWishResponse);
+  rpc GetUserWishes(GetUserWishesRequest) returns (GetUserWishesResponse);
+  rpc GetWishByID(GetWishByIDRequest) returns (kifi.goals.Wish);
+  rpc GetFamilyWishes(GetFamilyWishesRequest) returns (GetFamilyWishesResponse);
+}

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option go_package = "github.com/kifiApp/common/gen;gen";
+
+
+package kifi.goals;
+
+import "google/protobuf/timestamp.proto";
+
+message Wish {
+  int64 id = 1;
+  int64 user_id= 2;
+  int64 family_id = 3;
+  string category = 4;
+  oneof wishData {
+    TravelWish travelWish = 5;
+    ProductWish productWish = 6;
+    EntertainmentWish entertainmentWish = 7;
+  }
+  bool is_completed = 8;
+  bool is_family_wish = 9;
+  bool is_private = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  google.protobuf.Timestamp notification_date = 13;
+}
+
+message TravelWish {
+  string title = 1;
+  string destination = 2;
+  string price = 3;
+  string totalAmount = 4;
+  string photoUrl = 5;
+  string description = 6;
+}
+
+message ProductWish {
+  string title = 1;
+  string price = 2;
+  string totalAmount = 3;
+  string photoUrl = 4;
+  string description = 5;
+}
+
+message EntertainmentWish {
+  string title = 1;
+  string price = 2;
+  string totalAmount = 3;
+  string photoUrl = 4;
+  string description = 5;
+}
+
+message WishList {
+  repeated Wish wishes = 1;
+}
