@@ -12,7 +12,7 @@ message Wish {
   int64 user_id= 2;
   int64 family_id = 3;
   string category = 4;
-  repeated bytes wishData = 5;
+  bytes wishData = 5;
   bool is_completed = 6;
   bool is_family_wish = 7;
   bool is_private = 8;
