@@ -12,17 +12,13 @@ message Wish {
   int64 user_id= 2;
   int64 family_id = 3;
   string category = 4;
-  oneof wishData {
-    TravelWish travelWish = 5;
-    ProductWish productWish = 6;
-    EntertainmentWish entertainmentWish = 7;
-  }
-  bool is_completed = 8;
-  bool is_family_wish = 9;
-  bool is_private = 10;
-  google.protobuf.Timestamp created_at = 11;
-  google.protobuf.Timestamp updated_at = 12;
-  google.protobuf.Timestamp notification_date = 13;
+  repeated bytes wishData = 5;
+  bool is_completed = 6;
+  bool is_family_wish = 7;
+  bool is_private = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  google.protobuf.Timestamp notification_date = 11;
 }
 
 message TravelWish {
