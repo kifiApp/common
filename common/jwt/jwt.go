@@ -64,10 +64,7 @@ func (j *JWTImpl) GenerateRefreshToken(userID int64, tokenUID string) (string, e
 		RegisteredClaims: jwtgo.RegisteredClaims{
 			ExpiresAt: jwtgo.NewNumericDate(time.Now().Add(time.Hour * 1)),
 			Issuer:    "kifiApp",
-			IssuedAt:  jwtgo.NewNumericDate(time.Now()),
-			NotBefore: jwtgo.NewNumericDate(time.Now()),
 			Subject:   "refresh",
-			Audience:  jwtgo.ClaimStrings{"kifiApp"},
 			ID:        tokenUID,
 		},
 	})
