@@ -99,7 +99,7 @@ message RefreshTokenResponse {
   string AccessToken = 1;
   string RefreshToken = 2;
   string TokenUID = 3;
-  string UserID = 4;
+  int64 UserID = 4;
 }
 
 message UserUpdateRequest {
