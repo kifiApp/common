@@ -26,6 +26,7 @@ type UsersClient interface {
 	Signup(ctx context.Context, in *UserSignupRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
 	Login(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error)
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 	Update(ctx context.Context, in *UserUpdateRequest, opts ...grpc.CallOption) (*UserUpdateResponse, error)
 	Delete(ctx context.Context, in *UserDeleteRequest, opts ...grpc.CallOption) (*UserDeleteResponse, error)
 	Get(ctx context.Context, in *UserGetRequest, opts ...grpc.CallOption) (*UserGetResponse, error)
@@ -67,6 +68,15 @@ func (c *usersClient) Login(ctx context.Context, in *UserLoginRequest, opts ...g
 func (c *usersClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
 	out := new(AuthResponse)
 	err := c.cc.Invoke(ctx, "/kifi.users.Users/Auth", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
+	out := new(RefreshTokenResponse)
+	err := c.cc.Invoke(ctx, "/kifi.users.Users/RefreshToken", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -170,6 +180,7 @@ type UsersServer interface {
 	Signup(context.Context, *UserSignupRequest) (*UserSignupResponse, error)
 	Login(context.Context, *UserLoginRequest) (*UserLoginResponse, error)
 	Auth(context.Context, *AuthRequest) (*AuthResponse, error)
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 	Update(context.Context, *UserUpdateRequest) (*UserUpdateResponse, error)
 	Delete(context.Context, *UserDeleteRequest) (*UserDeleteResponse, error)
 	Get(context.Context, *UserGetRequest) (*UserGetResponse, error)
@@ -195,6 +206,9 @@ func (UnimplementedUsersServer) Login(context.Context, *UserLoginRequest) (*User
 }
 func (UnimplementedUsersServer) Auth(context.Context, *AuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
+}
+func (UnimplementedUsersServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedUsersServer) Update(context.Context, *UserUpdateRequest) (*UserUpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -289,6 +303,24 @@ func _Users_Auth_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UsersServer).Auth(ctx, req.(*AuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.users.Users/RefreshToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -491,6 +523,10 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Auth",
 			Handler:    _Users_Auth_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _Users_RefreshToken_Handler,
 		},
 		{
 			MethodName: "Update",

@@ -91,6 +91,16 @@ message AuthResponse {
   int64 userID = 1;
 }
 
+message RefreshTokenRequest {
+  string tokenUUID = 1;
+}
+
+message RefreshTokenResponse {
+  string AccessToken = 1;
+  string RefreshToken = 2;
+  string TokenUID = 3;
+  string UserID = 4;
+}
 
 message UserUpdateRequest {
   int64 id = 1;
@@ -155,6 +165,7 @@ service Users {
   rpc Signup(UserSignupRequest) returns (UserSignupResponse);
   rpc Login(UserLoginRequest) returns (UserLoginResponse);
   rpc Auth(AuthRequest) returns (AuthResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
   rpc Update(UserUpdateRequest) returns (UserUpdateResponse);
   rpc Delete(UserDeleteRequest) returns (UserDeleteResponse);
   rpc Get(UserGetRequest) returns (UserGetResponse);
