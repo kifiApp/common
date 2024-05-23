@@ -60,7 +60,8 @@ func (j *JWTImpl) GenerateToken(username string, userID int64) (string, string, 
 
 func (j *JWTImpl) GenerateRefreshToken(userID int64, tokenUID string) (string, error) {
 	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, CustomClaims{
-		UserID: userID,
+		UserID:    userID,
+		TokenUUID: tokenUID,
 		RegisteredClaims: jwtgo.RegisteredClaims{
 			ExpiresAt: jwtgo.NewNumericDate(time.Now().Add(time.Hour * 1)),
 			Issuer:    "kifiApp",
