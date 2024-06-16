@@ -51,3 +51,32 @@ message EntertainmentWish {
 message WishList {
   repeated Wish wishes = 1;
 }
+
+message WishImage {
+  int64 id = 1;
+  int64 wishID = 2;
+  string imageURL = 3;
+  string bitmapURL = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message WishImageList {
+  repeated WishImage images = 1;
+}
+
+message WishTransaction{
+  int64 id = 1;
+  int64 wishID = 2;
+  int64 userID = 3;
+  int64 accountID = 4;
+  string paymentAmount = 5;
+  string remainingAmount = 6;
+  string TransactionStatus = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message WishTransactionList {
+  repeated WishTransaction transactions = 1;
+}

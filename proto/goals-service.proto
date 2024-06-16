@@ -42,10 +42,51 @@ message GetFamilyWishesResponse {
   repeated kifi.goals.Wish wishes = 2;
 }
 
+message AddImageToWishRequest {
+  int64 wishID = 1;
+  string imageUrl = 2;
+  string bitmapUrl = 3;
+}
+
+message ListImagesRequest {
+  int64 wishID = 1;
+}
+
+message MakePaymentRequest {
+  int64 wishID = 1;
+  int64 accountID = 2;
+  int64 userID = 3;
+  string paymentAmount = 4;
+}
+
+message GoalsTransactionsRequest {
+  int64 wishID = 1;
+}
+
+message CompleteGoalRequest {
+  int64 wishID = 1;
+}
+
+message WishSortRequest{
+  kifi.goals.Wish wish = 1;
+}
+
+
+message WishSortResponse{
+  google.protobuf.Empty empty = 1;
+}
+
+
 
 service Goals{
   rpc CreateWish(CreateWishRequest) returns (CreateWishResponse);
   rpc GetUserWishes(GetUserWishesRequest) returns (GetUserWishesResponse);
   rpc GetWishByID(GetWishByIDRequest) returns (kifi.goals.Wish);
   rpc GetFamilyWishes(GetFamilyWishesRequest) returns (GetFamilyWishesResponse);
+  rpc AddImagesToWish(AddImageToWishRequest) returns (google.protobuf.Empty);
+  rpc ListImages(ListImagesRequest) returns (kifi.goals.WishImageList);
+  rpc MakeWishPayment(MakePaymentRequest) returns (google.protobuf.Empty);
+  rpc GetWishPayments(GoalsTransactionsRequest) returns (kifi.goals.WishTransactionList);
+  rpc CompleteGoal(CompleteGoalRequest) returns (google.protobuf.Empty);
+  rpc CheckSorting(WishSortRequest) returns (WishSortResponse);
 }
