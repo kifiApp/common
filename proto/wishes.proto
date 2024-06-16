@@ -14,11 +14,13 @@ message Wish {
   int64 notification_duration = 4;
   string category = 5;
   bytes wishData = 6;
-  bool is_completed = 7;
-  bool is_family_wish = 8;
-  bool is_private = 9;
-  google.protobuf.Timestamp created_at = 10;
-  google.protobuf.Timestamp updated_at = 11;
+  string price = 7;
+  string collectedAmount = 8;
+  bool is_completed = 9;
+  bool is_family_wish = 10;
+  bool is_private = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
 }
 
 message TravelWish {
