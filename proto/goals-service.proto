@@ -59,11 +59,11 @@ message MakePaymentRequest {
   string paymentAmount = 4;
 }
 
-message GoalsTransactionsRequest {
+message WishTransactionsRequest {
   int64 wishID = 1;
 }
 
-message CompleteGoalRequest {
+message CompleteWishRequest {
   int64 wishID = 1;
 }
 
@@ -86,7 +86,7 @@ service Goals{
   rpc AddImagesToWish(AddImageToWishRequest) returns (google.protobuf.Empty);
   rpc ListImages(ListImagesRequest) returns (kifi.goals.WishImageList);
   rpc MakeWishPayment(MakePaymentRequest) returns (google.protobuf.Empty);
-  rpc GetWishPayments(GoalsTransactionsRequest) returns (kifi.goals.WishTransactionList);
-  rpc CompleteGoal(CompleteGoalRequest) returns (google.protobuf.Empty);
+  rpc GetWishPayments(WishTransactionsRequest) returns (kifi.goals.WishTransactionList);
+  rpc CompleteWish(CompleteWishRequest) returns (google.protobuf.Empty);
   rpc CheckSorting(WishSortRequest) returns (WishSortResponse);
 }
