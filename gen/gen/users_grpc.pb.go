@@ -37,6 +37,8 @@ type UsersClient interface {
 	RegisterDevice(ctx context.Context, in *UserDevice, opts ...grpc.CallOption) (*UserDevice, error)
 	GetUserDevice(ctx context.Context, in *GetUserDevicesRequest, opts ...grpc.CallOption) (*UserDevice, error)
 	UpdateUserDevice(ctx context.Context, in *UpdateUserDeviceRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	AddUserFinanceDetails(ctx context.Context, in *CreateUserFinancialInformation, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetUserFinanceDetails(ctx context.Context, in *GetUserFinancialInformationReq, opts ...grpc.CallOption) (*GetUserFinancialInformationResp, error)
 }
 
 type usersClient struct {
@@ -173,6 +175,24 @@ func (c *usersClient) UpdateUserDevice(ctx context.Context, in *UpdateUserDevice
 	return out, nil
 }
 
+func (c *usersClient) AddUserFinanceDetails(ctx context.Context, in *CreateUserFinancialInformation, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/kifi.users.Users/AddUserFinanceDetails", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) GetUserFinanceDetails(ctx context.Context, in *GetUserFinancialInformationReq, opts ...grpc.CallOption) (*GetUserFinancialInformationResp, error) {
+	out := new(GetUserFinancialInformationResp)
+	err := c.cc.Invoke(ctx, "/kifi.users.Users/GetUserFinanceDetails", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServer is the server API for Users service.
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility
@@ -191,6 +211,8 @@ type UsersServer interface {
 	RegisterDevice(context.Context, *UserDevice) (*UserDevice, error)
 	GetUserDevice(context.Context, *GetUserDevicesRequest) (*UserDevice, error)
 	UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*empty.Empty, error)
+	AddUserFinanceDetails(context.Context, *CreateUserFinancialInformation) (*empty.Empty, error)
+	GetUserFinanceDetails(context.Context, *GetUserFinancialInformationReq) (*GetUserFinancialInformationResp, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -239,6 +261,12 @@ func (UnimplementedUsersServer) GetUserDevice(context.Context, *GetUserDevicesRe
 }
 func (UnimplementedUsersServer) UpdateUserDevice(context.Context, *UpdateUserDeviceRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserDevice not implemented")
+}
+func (UnimplementedUsersServer) AddUserFinanceDetails(context.Context, *CreateUserFinancialInformation) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddUserFinanceDetails not implemented")
+}
+func (UnimplementedUsersServer) GetUserFinanceDetails(context.Context, *GetUserFinancialInformationReq) (*GetUserFinancialInformationResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserFinanceDetails not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 
@@ -505,6 +533,42 @@ func _Users_UpdateUserDevice_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Users_AddUserFinanceDetails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserFinancialInformation)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).AddUserFinanceDetails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.users.Users/AddUserFinanceDetails",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).AddUserFinanceDetails(ctx, req.(*CreateUserFinancialInformation))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_GetUserFinanceDetails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserFinancialInformationReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).GetUserFinanceDetails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.users.Users/GetUserFinanceDetails",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).GetUserFinanceDetails(ctx, req.(*GetUserFinancialInformationReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Users_ServiceDesc is the grpc.ServiceDesc for Users service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -567,6 +631,14 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserDevice",
 			Handler:    _Users_UpdateUserDevice_Handler,
+		},
+		{
+			MethodName: "AddUserFinanceDetails",
+			Handler:    _Users_AddUserFinanceDetails_Handler,
+		},
+		{
+			MethodName: "GetUserFinanceDetails",
+			Handler:    _Users_GetUserFinanceDetails_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
