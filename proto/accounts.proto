@@ -4,14 +4,55 @@ option go_package = "github.com/kifiApp/common/gen;gen";
 
 package kifi.accounts;
 
+import "google/protobuf/timestamp.proto";
 
 
-message UserWallet {
+message UserAccount {
   int64 id = 1;
   int64 userID = 2;
-  string currencyISO = 3;
-  string balance = 4;
-  string created_at = 5;
-  string updated_at = 6;
-
+  int64 familyID = 3;
+  bool isFamily = 4;
+  string currencyISO = 5;
+  string name = 6;
+  string balance = 7;
+  string created_at = 8;
+  string updated_at = 9;
 }
+
+message UserAccountList{
+  repeated UserAccount userAccounts = 1;
+}
+
+message Currency{
+  string currencyISO = 1;
+  string currencyName = 2;
+  string currencySymbol = 3;
+}
+
+message CurrencyList{
+  repeated Currency currencies = 1;
+}
+
+message UserAccountDepositReplenish{
+  int64 id = 1;
+  int64 currencyID = 2;
+  int64 userID = 3;
+  int64 accountID = 4;
+  int64 transferID = 5;
+  int64 goalID = 6;
+  string amount = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message AccountTransactions{
+  int64 id = 1;
+  int64 accountID = 2;
+  int64 transferID = 3;
+  string type = 4;
+  string amount = 5;
+  string balanceBefore = 6;
+  string balanceAfter = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+

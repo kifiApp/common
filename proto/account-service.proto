@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+option go_package = "github.com/kifiApp/common/gen;gen";
+
+
+package kifi.accounts.service.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+import "accounts.proto";
+
+message UserAccountsRequest {
+  int64 userID = 1;
+}
+
+message UserAccountsResponse {
+  kifi.accounts.UserAccountList userAccounts = 1;
+  int64 total_number = 2;
+  string total_balance = 3;
+}
+
+message UserGoalTransactionsRequest{
+  int64 userID = 1;
+  int64 goalID = 2;
+  int64 accountID = 3;
+}
+
+message UserGoalTransactionsResponse{
+  kifi.accounts.AccountTransactions transactions = 1;
+  string total_amount = 2;
+}
+
+message UserAccountTransactionsRequest{
+  int64 accountID = 2;
+  int64 userID = 3;
+}
+
+message UserAccountTransactionsResponse{
+  kifi.accounts.AccountTransactions transactions = 1;
+  string total_amount = 2;
+}
+
+message UserGoalDepositReplenishRequest{
+  int64 userID = 1;
+  int64 accountID = 2;
+  int64 transferID = 3;
+  int64 goalID = 4;
+  string amount = 5;
+}
+
+message UserAccountDepositReplenishResponse{
+  int64 transferID = 1;
+}
+
+message CreateUserAccountRequest{
+  int64 userID = 1;
+  int64 familyID = 2;
+  bool isFamily = 3;
+  string currencyISO = 4;
+  string name = 5;
+  string initialBalance = 6;
+  string type = 7;
+}
+
+message CreateUserAccountResponse{
+  int64 accountID = 1;
+}
+
+
+
+service Accounts{
+  rpc UserAccounts(UserAccountsRequest) returns (UserAccountsResponse);
+  rpc UserGoalTransactions(UserGoalTransactionsRequest) returns (UserGoalTransactionsResponse);
+  rpc UserAccountTransactions(UserAccountTransactionsRequest) returns (UserAccountTransactionsResponse);
+  rpc UserGoalDepositReplenish(UserGoalDepositReplenishRequest) returns (UserAccountDepositReplenishResponse);
+  rpc CreateUserAccount(CreateUserAccountRequest) returns (CreateUserAccountResponse);
+}
