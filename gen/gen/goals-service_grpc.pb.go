@@ -29,8 +29,6 @@ type GoalsClient interface {
 	GetFamilyWishes(ctx context.Context, in *GetFamilyWishesRequest, opts ...grpc.CallOption) (*GetFamilyWishesResponse, error)
 	AddImagesToWish(ctx context.Context, in *AddImageToWishRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	ListImages(ctx context.Context, in *ListImagesRequest, opts ...grpc.CallOption) (*WishImageList, error)
-	MakeWishPayment(ctx context.Context, in *MakePaymentRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	GetWishPayments(ctx context.Context, in *WishTransactionsRequest, opts ...grpc.CallOption) (*WishTransactionList, error)
 	CompleteWish(ctx context.Context, in *CompleteWishRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	CheckSorting(ctx context.Context, in *WishSortRequest, opts ...grpc.CallOption) (*WishSortResponse, error)
 }
@@ -97,24 +95,6 @@ func (c *goalsClient) ListImages(ctx context.Context, in *ListImagesRequest, opt
 	return out, nil
 }
 
-func (c *goalsClient) MakeWishPayment(ctx context.Context, in *MakePaymentRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/MakeWishPayment", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *goalsClient) GetWishPayments(ctx context.Context, in *WishTransactionsRequest, opts ...grpc.CallOption) (*WishTransactionList, error) {
-	out := new(WishTransactionList)
-	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/GetWishPayments", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *goalsClient) CompleteWish(ctx context.Context, in *CompleteWishRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/CompleteWish", in, out, opts...)
@@ -143,8 +123,6 @@ type GoalsServer interface {
 	GetFamilyWishes(context.Context, *GetFamilyWishesRequest) (*GetFamilyWishesResponse, error)
 	AddImagesToWish(context.Context, *AddImageToWishRequest) (*empty.Empty, error)
 	ListImages(context.Context, *ListImagesRequest) (*WishImageList, error)
-	MakeWishPayment(context.Context, *MakePaymentRequest) (*empty.Empty, error)
-	GetWishPayments(context.Context, *WishTransactionsRequest) (*WishTransactionList, error)
 	CompleteWish(context.Context, *CompleteWishRequest) (*empty.Empty, error)
 	CheckSorting(context.Context, *WishSortRequest) (*WishSortResponse, error)
 	mustEmbedUnimplementedGoalsServer()
@@ -171,12 +149,6 @@ func (UnimplementedGoalsServer) AddImagesToWish(context.Context, *AddImageToWish
 }
 func (UnimplementedGoalsServer) ListImages(context.Context, *ListImagesRequest) (*WishImageList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListImages not implemented")
-}
-func (UnimplementedGoalsServer) MakeWishPayment(context.Context, *MakePaymentRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MakeWishPayment not implemented")
-}
-func (UnimplementedGoalsServer) GetWishPayments(context.Context, *WishTransactionsRequest) (*WishTransactionList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWishPayments not implemented")
 }
 func (UnimplementedGoalsServer) CompleteWish(context.Context, *CompleteWishRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompleteWish not implemented")
@@ -305,42 +277,6 @@ func _Goals_ListImages_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Goals_MakeWishPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MakePaymentRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GoalsServer).MakeWishPayment(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/kifi.goals.service.v1.Goals/MakeWishPayment",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoalsServer).MakeWishPayment(ctx, req.(*MakePaymentRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Goals_GetWishPayments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WishTransactionsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GoalsServer).GetWishPayments(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/kifi.goals.service.v1.Goals/GetWishPayments",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoalsServer).GetWishPayments(ctx, req.(*WishTransactionsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Goals_CompleteWish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CompleteWishRequest)
 	if err := dec(in); err != nil {
@@ -407,14 +343,6 @@ var Goals_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListImages",
 			Handler:    _Goals_ListImages_Handler,
-		},
-		{
-			MethodName: "MakeWishPayment",
-			Handler:    _Goals_MakeWishPayment_Handler,
-		},
-		{
-			MethodName: "GetWishPayments",
-			Handler:    _Goals_GetWishPayments_Handler,
 		},
 		{
 			MethodName: "CompleteWish",
