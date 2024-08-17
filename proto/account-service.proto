@@ -15,7 +15,7 @@ message UserAccountsRequest {
 }
 
 message UserAccountsResponse {
-  kifi.accounts.UserAccountList userAccounts = 1;
+  repeated kifi.accounts.UserAccountList userAccounts = 1;
   int64 total_number = 2;
   string total_balance = 3;
 }
@@ -27,7 +27,7 @@ message UserGoalTransactionsRequest{
 }
 
 message UserGoalTransactionsResponse{
-  kifi.accounts.AccountTransactions transactions = 1;
+  repeated kifi.accounts.AccountTransactions transactions = 1;
   string total_amount = 2;
 }
 
@@ -37,7 +37,7 @@ message UserAccountTransactionsRequest{
 }
 
 message UserAccountTransactionsResponse{
-  kifi.accounts.AccountTransactions transactions = 1;
+  repeated kifi.accounts.AccountTransactions transactions = 1;
   string total_amount = 2;
 }
 
