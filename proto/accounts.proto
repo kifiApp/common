@@ -13,10 +13,11 @@ message UserAccount {
   int64 familyID = 3;
   bool isFamily = 4;
   string currencyISO = 5;
-  string name = 6;
-  string balance = 7;
-  string created_at = 8;
-  string updated_at = 9;
+  int64 currencyID = 6;
+  string name = 7;
+  string balance = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
 }
 
 message UserAccountList{
