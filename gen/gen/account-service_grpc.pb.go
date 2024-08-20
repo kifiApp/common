@@ -27,6 +27,7 @@ type AccountsClient interface {
 	UserAccountTransactions(ctx context.Context, in *UserAccountTransactionsRequest, opts ...grpc.CallOption) (*UserAccountTransactionsResponse, error)
 	UserGoalDepositReplenish(ctx context.Context, in *UserGoalDepositReplenishRequest, opts ...grpc.CallOption) (*UserAccountDepositReplenishResponse, error)
 	CreateUserAccount(ctx context.Context, in *CreateUserAccountRequest, opts ...grpc.CallOption) (*CreateUserAccountResponse, error)
+	GenerateTransferID(ctx context.Context, in *GenerateTransferIDRequest, opts ...grpc.CallOption) (*GenerateTransferIDResponse, error)
 }
 
 type accountsClient struct {
@@ -82,6 +83,15 @@ func (c *accountsClient) CreateUserAccount(ctx context.Context, in *CreateUserAc
 	return out, nil
 }
 
+func (c *accountsClient) GenerateTransferID(ctx context.Context, in *GenerateTransferIDRequest, opts ...grpc.CallOption) (*GenerateTransferIDResponse, error) {
+	out := new(GenerateTransferIDResponse)
+	err := c.cc.Invoke(ctx, "/kifi.accounts.service.v1.Accounts/GenerateTransferID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountsServer is the server API for Accounts service.
 // All implementations must embed UnimplementedAccountsServer
 // for forward compatibility
@@ -91,6 +101,7 @@ type AccountsServer interface {
 	UserAccountTransactions(context.Context, *UserAccountTransactionsRequest) (*UserAccountTransactionsResponse, error)
 	UserGoalDepositReplenish(context.Context, *UserGoalDepositReplenishRequest) (*UserAccountDepositReplenishResponse, error)
 	CreateUserAccount(context.Context, *CreateUserAccountRequest) (*CreateUserAccountResponse, error)
+	GenerateTransferID(context.Context, *GenerateTransferIDRequest) (*GenerateTransferIDResponse, error)
 	mustEmbedUnimplementedAccountsServer()
 }
 
@@ -112,6 +123,9 @@ func (UnimplementedAccountsServer) UserGoalDepositReplenish(context.Context, *Us
 }
 func (UnimplementedAccountsServer) CreateUserAccount(context.Context, *CreateUserAccountRequest) (*CreateUserAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserAccount not implemented")
+}
+func (UnimplementedAccountsServer) GenerateTransferID(context.Context, *GenerateTransferIDRequest) (*GenerateTransferIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateTransferID not implemented")
 }
 func (UnimplementedAccountsServer) mustEmbedUnimplementedAccountsServer() {}
 
@@ -216,6 +230,24 @@ func _Accounts_CreateUserAccount_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Accounts_GenerateTransferID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateTransferIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountsServer).GenerateTransferID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.accounts.service.v1.Accounts/GenerateTransferID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountsServer).GenerateTransferID(ctx, req.(*GenerateTransferIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Accounts_ServiceDesc is the grpc.ServiceDesc for Accounts service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -242,6 +274,10 @@ var Accounts_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUserAccount",
 			Handler:    _Accounts_CreateUserAccount_Handler,
+		},
+		{
+			MethodName: "GenerateTransferID",
+			Handler:    _Accounts_GenerateTransferID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
