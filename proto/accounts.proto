@@ -16,8 +16,9 @@ message UserAccount {
   int64 currencyID = 6;
   string name = 7;
   string balance = 8;
-  google.protobuf.Timestamp created_at = 9;
-  google.protobuf.Timestamp updated_at = 10;
+  string type = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
 }
 
 message UserAccountList{
