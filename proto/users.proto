@@ -54,16 +54,20 @@ message UserListResponse {
   repeated kifi.users.User users = 1;
 }
 
+message UserInfo{
+  string Name = 1;
+  string AvatarPath = 2;
+  int32 MonthlyIncome=3;
+  int32 MonthlyOutcome=4;
+  int32 Savings=5;
+}
+
 message UserSignupRequest {
   string Username = 1;
-  string Name = 2;
-  string FirstName = 3;
-  string LastName = 4;
-  string MiddleName = 5;
-  bool IsOwner = 6;
-  string Location = 7;
-  string phoneNumber = 8;
-  bytes password = 9;
+  bool IsOwner = 2;
+  bool AgreementSigned = 3;
+  string phoneNumber = 4;
+  bytes password = 5;
   string DeviceID = 10;
 }
 
