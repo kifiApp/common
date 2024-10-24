@@ -32,8 +32,8 @@ ifeq (, $(shell which protoc))
 	}
 endif
 
-generate: install-protoc
-	protoc -Iproto --go_opt=module=github.com/kifiApp/common --go-grpc_opt=module=github.com/kifiApp/common  --go_out=./gen --go-grpc_out=./gen proto/*.proto
+generate:
+	protoc -I/usr/local/include -Iproto --go_opt=module=github.com/kifiApp/common --go-grpc_opt=module=github.com/kifiApp/common  --go_out=./gen --go-grpc_out=./gen proto/*.proto
 
 modsync: generate
 	go get -u ./...

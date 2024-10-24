@@ -30,17 +30,13 @@ message Member {
 message User {
   int64 Id = 1;
   string Username = 2;
-  string Name = 3;
-  string FirstName = 4;
-  string LastName = 5;
-  string MiddleName = 6;
-  bool IsOwner = 7;
-  string Location = 8;
-  string phoneNumber = 9;
-  google.protobuf.StringValue user_avatar = 10;
-  kifi.users.Member Person = 11;
-  google.protobuf.Timestamp createdAt = 12;
-  google.protobuf.Timestamp updatedAt = 13;
+  bool IsOwner = 3;
+  bool AgreementSigned = 4;
+  string phoneNumber = 5;
+  UserInfo info = 6;
+  kifi.users.Member Person = 7;
+  google.protobuf.Timestamp createdAt = 8;
+  google.protobuf.Timestamp updatedAt = 9;
 }
 
 
@@ -68,7 +64,7 @@ message UserSignupRequest {
   bool AgreementSigned = 3;
   string phoneNumber = 4;
   bytes password = 5;
-  string DeviceID = 10;
+  string DeviceID = 6;
 }
 
 message UserSignupResponse {
@@ -108,12 +104,9 @@ message RefreshTokenResponse {
 
 message UserUpdateRequest {
   int64 id = 1;
-  string Name = 2;
-  string FirstName = 3;
-  string LastName = 4;
-  string MiddleName = 5;
-  bool IsOwner = 6;
-  string Location = 7;
+  UserInfo info = 2;
+  bool IsOwner = 3;
+  bool AgreementSigned = 4;
 }
 
 message UserUpdateResponse {
@@ -164,44 +157,7 @@ message FamilyMembersResponse{
   repeated kifi.users.Member members = 1;
 }
 
-message UserMonthlyIncomeDetails{
-  int64 id = 1;
-  string category = 2;
-  string amount = 3;
-  string description = 4;
-  int32 payment_day = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
-}
 
-message UserMonthlyExpensesDetails{
-  int64 id = 1;
-  string category = 2;
-  string amount = 3;
-  string description = 4;
-  int32 payment_day = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
-}
-
-message CreateUserFinancialInformation{
-  int64 id = 1;
-  int64 user_id = 2;
-  repeated kifi.users.UserMonthlyIncomeDetails monthly_income = 3;
-  repeated kifi.users.UserMonthlyExpensesDetails monthly_expenses = 4;
-}
-
-message GetUserFinancialInformationReq{
-  int64 user_id = 2;
-}
-
-message GetUserFinancialInformationResp{
-  string total_income = 1;
-  string total_expenses = 2;
-  string remaining_amount = 3;
-  repeated kifi.users.UserMonthlyIncomeDetails monthly_income = 4;
-  repeated kifi.users.UserMonthlyExpensesDetails monthly_expenses = 5;
-}
 
 
 service Users {
@@ -219,8 +175,6 @@ service Users {
   rpc RegisterDevice(UserDevice) returns (UserDevice);
   rpc GetUserDevice(GetUserDevicesRequest) returns (UserDevice);
   rpc UpdateUserDevice(UpdateUserDeviceRequest) returns (google.protobuf.Empty);
-  rpc AddUserFinanceDetails(CreateUserFinancialInformation) returns (google.protobuf.Empty);
-  rpc GetUserFinanceDetails(GetUserFinancialInformationReq) returns (GetUserFinancialInformationResp);
 }
 
 
