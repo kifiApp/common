@@ -65,6 +65,7 @@ message UserSignupRequest {
   string phoneNumber = 4;
   bytes password = 5;
   string DeviceID = 6;
+  UserInfo info = 7;
 }
 
 message UserSignupResponse {
