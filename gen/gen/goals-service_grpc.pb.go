@@ -24,13 +24,17 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GoalsClient interface {
 	CreateWish(ctx context.Context, in *CreateWishRequest, opts ...grpc.CallOption) (*CreateWishResponse, error)
+	CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error)
+	MakeGoalFromWish(ctx context.Context, in *MakeWishAsGoalRequest, opts ...grpc.CallOption) (*MakeWishAsGoalResponse, error)
 	GetUserWishes(ctx context.Context, in *GetUserWishesRequest, opts ...grpc.CallOption) (*GetUserWishesResponse, error)
+	GetUserGoals(ctx context.Context, in *GetUserGoalsRequest, opts ...grpc.CallOption) (*GetUserGoalsResponse, error)
+	GetGoalByID(ctx context.Context, in *GetGoalByIDRequest, opts ...grpc.CallOption) (*Goal, error)
 	GetWishByID(ctx context.Context, in *GetWishByIDRequest, opts ...grpc.CallOption) (*Wish, error)
 	GetFamilyWishes(ctx context.Context, in *GetFamilyWishesRequest, opts ...grpc.CallOption) (*GetFamilyWishesResponse, error)
 	AddImagesToWish(ctx context.Context, in *AddImageToWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListImages(ctx context.Context, in *ListImagesRequest, opts ...grpc.CallOption) (*WishImageList, error)
-	CompleteWish(ctx context.Context, in *CompleteWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CheckSorting(ctx context.Context, in *WishSortRequest, opts ...grpc.CallOption) (*WishSortResponse, error)
+	CompleteWish(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CheckSorting(ctx context.Context, in *GoalSortRequest, opts ...grpc.CallOption) (*GoalSortResponse, error)
 }
 
 type goalsClient struct {
@@ -50,9 +54,45 @@ func (c *goalsClient) CreateWish(ctx context.Context, in *CreateWishRequest, opt
 	return out, nil
 }
 
+func (c *goalsClient) CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error) {
+	out := new(CreateGoalResponse)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/CreateGoal", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goalsClient) MakeGoalFromWish(ctx context.Context, in *MakeWishAsGoalRequest, opts ...grpc.CallOption) (*MakeWishAsGoalResponse, error) {
+	out := new(MakeWishAsGoalResponse)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/MakeGoalFromWish", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *goalsClient) GetUserWishes(ctx context.Context, in *GetUserWishesRequest, opts ...grpc.CallOption) (*GetUserWishesResponse, error) {
 	out := new(GetUserWishesResponse)
 	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/GetUserWishes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goalsClient) GetUserGoals(ctx context.Context, in *GetUserGoalsRequest, opts ...grpc.CallOption) (*GetUserGoalsResponse, error) {
+	out := new(GetUserGoalsResponse)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/GetUserGoals", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goalsClient) GetGoalByID(ctx context.Context, in *GetGoalByIDRequest, opts ...grpc.CallOption) (*Goal, error) {
+	out := new(Goal)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/GetGoalByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +135,7 @@ func (c *goalsClient) ListImages(ctx context.Context, in *ListImagesRequest, opt
 	return out, nil
 }
 
-func (c *goalsClient) CompleteWish(ctx context.Context, in *CompleteWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *goalsClient) CompleteWish(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/CompleteWish", in, out, opts...)
 	if err != nil {
@@ -104,8 +144,8 @@ func (c *goalsClient) CompleteWish(ctx context.Context, in *CompleteWishRequest,
 	return out, nil
 }
 
-func (c *goalsClient) CheckSorting(ctx context.Context, in *WishSortRequest, opts ...grpc.CallOption) (*WishSortResponse, error) {
-	out := new(WishSortResponse)
+func (c *goalsClient) CheckSorting(ctx context.Context, in *GoalSortRequest, opts ...grpc.CallOption) (*GoalSortResponse, error) {
+	out := new(GoalSortResponse)
 	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/CheckSorting", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -118,13 +158,17 @@ func (c *goalsClient) CheckSorting(ctx context.Context, in *WishSortRequest, opt
 // for forward compatibility
 type GoalsServer interface {
 	CreateWish(context.Context, *CreateWishRequest) (*CreateWishResponse, error)
+	CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error)
+	MakeGoalFromWish(context.Context, *MakeWishAsGoalRequest) (*MakeWishAsGoalResponse, error)
 	GetUserWishes(context.Context, *GetUserWishesRequest) (*GetUserWishesResponse, error)
+	GetUserGoals(context.Context, *GetUserGoalsRequest) (*GetUserGoalsResponse, error)
+	GetGoalByID(context.Context, *GetGoalByIDRequest) (*Goal, error)
 	GetWishByID(context.Context, *GetWishByIDRequest) (*Wish, error)
 	GetFamilyWishes(context.Context, *GetFamilyWishesRequest) (*GetFamilyWishesResponse, error)
 	AddImagesToWish(context.Context, *AddImageToWishRequest) (*emptypb.Empty, error)
 	ListImages(context.Context, *ListImagesRequest) (*WishImageList, error)
-	CompleteWish(context.Context, *CompleteWishRequest) (*emptypb.Empty, error)
-	CheckSorting(context.Context, *WishSortRequest) (*WishSortResponse, error)
+	CompleteWish(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error)
+	CheckSorting(context.Context, *GoalSortRequest) (*GoalSortResponse, error)
 	mustEmbedUnimplementedGoalsServer()
 }
 
@@ -135,8 +179,20 @@ type UnimplementedGoalsServer struct {
 func (UnimplementedGoalsServer) CreateWish(context.Context, *CreateWishRequest) (*CreateWishResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateWish not implemented")
 }
+func (UnimplementedGoalsServer) CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateGoal not implemented")
+}
+func (UnimplementedGoalsServer) MakeGoalFromWish(context.Context, *MakeWishAsGoalRequest) (*MakeWishAsGoalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MakeGoalFromWish not implemented")
+}
 func (UnimplementedGoalsServer) GetUserWishes(context.Context, *GetUserWishesRequest) (*GetUserWishesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserWishes not implemented")
+}
+func (UnimplementedGoalsServer) GetUserGoals(context.Context, *GetUserGoalsRequest) (*GetUserGoalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserGoals not implemented")
+}
+func (UnimplementedGoalsServer) GetGoalByID(context.Context, *GetGoalByIDRequest) (*Goal, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGoalByID not implemented")
 }
 func (UnimplementedGoalsServer) GetWishByID(context.Context, *GetWishByIDRequest) (*Wish, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWishByID not implemented")
@@ -150,10 +206,10 @@ func (UnimplementedGoalsServer) AddImagesToWish(context.Context, *AddImageToWish
 func (UnimplementedGoalsServer) ListImages(context.Context, *ListImagesRequest) (*WishImageList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListImages not implemented")
 }
-func (UnimplementedGoalsServer) CompleteWish(context.Context, *CompleteWishRequest) (*emptypb.Empty, error) {
+func (UnimplementedGoalsServer) CompleteWish(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompleteWish not implemented")
 }
-func (UnimplementedGoalsServer) CheckSorting(context.Context, *WishSortRequest) (*WishSortResponse, error) {
+func (UnimplementedGoalsServer) CheckSorting(context.Context, *GoalSortRequest) (*GoalSortResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckSorting not implemented")
 }
 func (UnimplementedGoalsServer) mustEmbedUnimplementedGoalsServer() {}
@@ -187,6 +243,42 @@ func _Goals_CreateWish_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Goals_CreateGoal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateGoalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).CreateGoal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/CreateGoal",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).CreateGoal(ctx, req.(*CreateGoalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goals_MakeGoalFromWish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MakeWishAsGoalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).MakeGoalFromWish(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/MakeGoalFromWish",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).MakeGoalFromWish(ctx, req.(*MakeWishAsGoalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Goals_GetUserWishes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserWishesRequest)
 	if err := dec(in); err != nil {
@@ -201,6 +293,42 @@ func _Goals_GetUserWishes_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GoalsServer).GetUserWishes(ctx, req.(*GetUserWishesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goals_GetUserGoals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserGoalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).GetUserGoals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/GetUserGoals",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).GetUserGoals(ctx, req.(*GetUserGoalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goals_GetGoalByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGoalByIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).GetGoalByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/GetGoalByID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).GetGoalByID(ctx, req.(*GetGoalByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -278,7 +406,7 @@ func _Goals_ListImages_Handler(srv interface{}, ctx context.Context, dec func(in
 }
 
 func _Goals_CompleteWish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CompleteWishRequest)
+	in := new(CompleteGoalRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -290,13 +418,13 @@ func _Goals_CompleteWish_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/kifi.goals.service.v1.Goals/CompleteWish",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoalsServer).CompleteWish(ctx, req.(*CompleteWishRequest))
+		return srv.(GoalsServer).CompleteWish(ctx, req.(*CompleteGoalRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Goals_CheckSorting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WishSortRequest)
+	in := new(GoalSortRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -308,7 +436,7 @@ func _Goals_CheckSorting_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/kifi.goals.service.v1.Goals/CheckSorting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoalsServer).CheckSorting(ctx, req.(*WishSortRequest))
+		return srv.(GoalsServer).CheckSorting(ctx, req.(*GoalSortRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -325,8 +453,24 @@ var Goals_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Goals_CreateWish_Handler,
 		},
 		{
+			MethodName: "CreateGoal",
+			Handler:    _Goals_CreateGoal_Handler,
+		},
+		{
+			MethodName: "MakeGoalFromWish",
+			Handler:    _Goals_MakeGoalFromWish_Handler,
+		},
+		{
 			MethodName: "GetUserWishes",
 			Handler:    _Goals_GetUserWishes_Handler,
+		},
+		{
+			MethodName: "GetUserGoals",
+			Handler:    _Goals_GetUserGoals_Handler,
+		},
+		{
+			MethodName: "GetGoalByID",
+			Handler:    _Goals_GetGoalByID_Handler,
 		},
 		{
 			MethodName: "GetWishByID",

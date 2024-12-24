@@ -1,0 +1,99 @@
+linters-settings:
+  dupl:
+    threshold: 100
+  funlen:
+    lines: 300
+    statements: 50
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+    disabled-checks:
+      - hugeParam
+      - rangeValCopy
+  gocyclo:
+    min-complexity: 30
+  goimports:
+    local-prefixes: github.com/golangci/golangci-lint
+  golint:
+    min-confidence: 0
+  gosec:
+    settings:
+      exclude:
+        - "G102"
+  govet:
+    check-shadowing: true
+  misspell:
+    locale: US
+linters:
+  enable:
+    - bodyclose         # checks whether HTTP response body is closed successfully -
+    - dogsled           # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f())
+    - dupl              # Tool for code clone detection
+    - errcheck          # Errcheck is a program for checking for unchecked errors in go programs
+    - funlen            # Tool for detection of long functions
+    - gochecknoinits    # Checks that no init functions are present in Go code
+    - goconst           # Finds repeated strings that could be replaced by a constant
+    - gocritic          # The most opinionated Go source code linter
+    - gocyclo           # Computes and checks the cyclomatic complexity of functions
+    - gofmt             # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
+    - goimports         # Goimports does everything that gofmt does. Additionally it checks unused imports
+    - gosec             # (gas): Inspects source code for security problems
+    - gosimple          # Linter for Go source code that specializes in simplifying a code
+    - govet             # (vet, vetshadow): Vet examines Go source code and reports suspicious constructs
+    - ineffassign       # Detects when assignments to existing variables are not used
+    - misspell          # Finds commonly misspelled English words in comments
+    - nakedret          # Finds naked returns in functions greater than a specified function length
+    - prealloc          # Finds slice declarations that could potentially be preallocated
+    - staticcheck       # Staticcheck is a go vet on steroids, applying a ton of static analysis checks
+    - stylecheck        # Stylecheck is a replacement for golint
+    - typecheck         # Like the front-end of a Go compiler, parses and type-checks Go code
+    - unconvert         # Remove unnecessary type conversions
+    - unparam           # Reports unused function parameters
+    - unused            # Checks Go code for unused constants, variables, functions and types
+    - whitespace        # Tool for detection of leading and trailing whitespace [fast: true, auto-fix: true]
+issues:
+  exclude-use-default: false
+  exclude-dirs:
+    - test/testdata_etc
+    - proto
+    - gen/gen
+    - internal/golinters/goanalysis/(checker|passes)
+  exclude-rules:
+    - path: .*pb\.go
+      linters:
+        - typecheck
+    - text: weak cryptographic primitive
+      linters:
+        - gosec
+    - text: Binds to all network interfaces
+      linters:
+        - gosec
+    - text: Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*printf?|os\.(Un)?Setenv). is not checked
+      linters:
+        - errcheck
+    - text: (should have a package comment)
+      linters:
+        - golint
+    - linters:
+        - lll
+        - golint
+      source: "^//go:generate "
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - funlen
+
+
+
+
+  exclude:
+    - '^ST1000'
+    - "exported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported"
+service:
+  golangci-lint-version: 1.19.x
+  prepare:
+    - echo "here I can run custom commands, but no preparation needed for this repo"

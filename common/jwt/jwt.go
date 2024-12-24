@@ -2,10 +2,13 @@ package jwt
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
+
+	jwtgo "github.com/golang-jwt/jwt/v5"
+	// JWT
 )
-import jwtgo "github.com/golang-jwt/jwt/v5"
 
 // JWT interface for JWTImpl
 type JWT interface {
@@ -14,7 +17,7 @@ type JWT interface {
 	ValidateToken(token string) (CustomClaims, error)
 }
 
-// Implement the JWT interface here
+// JWTImpl Implement the JWT interface here
 type JWTImpl struct {
 	publicKey  string
 	privateKey string
@@ -34,7 +37,7 @@ type CustomClaims struct {
 	jwtgo.RegisteredClaims
 }
 
-// JWT implementation, which generate a token and validate with customClaims
+// GenerateToken JWT implementation, which generate a token and validate with customClaims
 func (j *JWTImpl) GenerateToken(username string, userID int64) (string, string, error) {
 	tokenUID := uuid.New().String()
 	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, CustomClaims{
@@ -79,9 +82,8 @@ func (j *JWTImpl) GenerateRefreshToken(userID int64, tokenUID string) (string, e
 func (j *JWTImpl) ValidateToken(token string) (CustomClaims, error) {
 	t, err := jwtgo.ParseWithClaims(token, &CustomClaims{}, func(token *jwtgo.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwtgo.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-
 		return j.secret, nil
 	})
 	if err != nil {
@@ -90,7 +92,6 @@ func (j *JWTImpl) ValidateToken(token string) (CustomClaims, error) {
 	if claims, ok := t.Claims.(*CustomClaims); ok && t.Valid {
 		return *claims, nil
 	} else {
-		return CustomClaims{}, fmt.Errorf("Invalid token")
+		return CustomClaims{}, fmt.Errorf("invalid token")
 	}
-
 }

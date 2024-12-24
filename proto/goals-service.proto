@@ -20,6 +20,24 @@ message CreateWishResponse {
   int64 wishID = 1;
 }
 
+message CreateGoalRequest{
+  int64 userId = 1;
+  kifi.goals.Goal goal = 2;
+}
+
+message CreateGoalResponse{
+  int64 goalID = 1;
+}
+
+message MakeWishAsGoalRequest{
+  int64 wishId = 1;
+  kifi.goals.Goal goal = 2;
+}
+
+message MakeWishAsGoalResponse{
+  int64 goalID = 1;
+}
+
 message GetUserWishesRequest {
   int64 userId = 1;
 }
@@ -28,8 +46,20 @@ message GetUserWishesResponse {
   repeated kifi.goals.Wish wishes = 1;
 }
 
+message GetUserGoalsRequest{
+  int64 userId = 1;
+}
+
+message GetUserGoalsResponse{
+  repeated kifi.goals.Goal goals = 1;
+}
+
 message GetWishByIDRequest {
   int64 wishID = 1;
+}
+
+message GetGoalByIDRequest{
+  int64 goalID = 1;
 }
 
 message GetFamilyWishesRequest {
@@ -52,29 +82,32 @@ message ListImagesRequest {
   int64 wishID = 1;
 }
 
-
-
-message CompleteWishRequest {
-  int64 wishID = 1;
+message CompleteGoalRequest {
+  int64 goalID = 1;
 }
 
-message WishSortRequest{
-  kifi.goals.Wish wish = 1;
+message GoalSortRequest{
+  kifi.goals.Goal goal = 1;
+  int32 priority = 2;
 }
 
 
-message WishSortResponse{
-  google.protobuf.Empty empty = 1;
+message GoalSortResponse{
+  int32 priority = 1;
 }
 
 
 service Goals{
   rpc CreateWish(CreateWishRequest) returns (CreateWishResponse);
+  rpc CreateGoal(CreateGoalRequest) returns (CreateGoalResponse);
+  rpc MakeGoalFromWish(MakeWishAsGoalRequest) returns (MakeWishAsGoalResponse);
   rpc GetUserWishes(GetUserWishesRequest) returns (GetUserWishesResponse);
+  rpc GetUserGoals(GetUserGoalsRequest) returns (GetUserGoalsResponse);
+  rpc GetGoalByID(GetGoalByIDRequest) returns (kifi.goals.Goal);
   rpc GetWishByID(GetWishByIDRequest) returns (kifi.goals.Wish);
   rpc GetFamilyWishes(GetFamilyWishesRequest) returns (GetFamilyWishesResponse);
   rpc AddImagesToWish(AddImageToWishRequest) returns (google.protobuf.Empty);
   rpc ListImages(ListImagesRequest) returns (kifi.goals.WishImageList);
-  rpc CompleteWish(CompleteWishRequest) returns (google.protobuf.Empty);
-  rpc CheckSorting(WishSortRequest) returns (WishSortResponse);
+  rpc CompleteWish(CompleteGoalRequest) returns (google.protobuf.Empty);
+  rpc CheckSorting(GoalSortRequest) returns (GoalSortResponse);
 }

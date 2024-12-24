@@ -11,16 +11,13 @@ message Wish {
   int64 id = 1;
   int64 user_id= 2;
   int64 family_id = 3;
-  int64 notification_duration = 4;
   string category = 5;
   bytes wishData = 6;
   string price = 7;
-  string collectedAmount = 8;
-  bool is_completed = 9;
-  bool is_family_wish = 10;
-  bool is_private = 11;
-  google.protobuf.Timestamp created_at = 12;
-  google.protobuf.Timestamp updated_at = 13;
+  bool is_family_wish = 8;
+  bool is_private = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
 }
 
 message TravelWish {
@@ -65,7 +62,26 @@ message WishImageList {
   repeated WishImage images = 1;
 }
 
-message WishTransaction{
+message Goal{
+  int64 id = 1;
+  Wish wish = 2;
+  int64 notificationDuration = 3;
+  string collectedAmount = 4;
+  bool is_completed = 5;
+  bool is_family_wish = 6;
+  bool is_private = 7;
+  int32 priority = 8;
+  google.protobuf.Timestamp start_date = 9;
+  google.protobuf.Timestamp end_date = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+message GoalList{
+  repeated Goal goals = 1;
+}
+
+message GoalTransaction{
   int64 id = 1;
   int64 wishID = 2;
   int64 userID = 3;
@@ -77,6 +93,6 @@ message WishTransaction{
   google.protobuf.Timestamp updated_at = 9;
 }
 
-message WishTransactionList {
-  repeated WishTransaction transactions = 1;
+message GoalTransactionList {
+  repeated GoalTransaction transactions = 1;
 }

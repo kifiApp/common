@@ -2,11 +2,12 @@ package logger
 
 import (
 	"fmt"
+	"log/slog"
+	"sync"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/exp/zapslog"
 	"go.uber.org/zap/zapcore"
-	"log/slog"
-	"sync"
 )
 
 var once sync.Once
