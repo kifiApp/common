@@ -34,7 +34,7 @@ type GoalsClient interface {
 	GetFamilyGoals(ctx context.Context, in *GetFamilyGoalsRequest, opts ...grpc.CallOption) (*GetFamilyGoalsResponse, error)
 	AddImagesToWish(ctx context.Context, in *AddImageToWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListImages(ctx context.Context, in *ListImagesRequest, opts ...grpc.CallOption) (*WishImageList, error)
-	CompleteWish(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompleteGoal(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CheckSorting(ctx context.Context, in *GoalSortRequest, opts ...grpc.CallOption) (*GoalSortResponse, error)
 }
 
@@ -145,9 +145,9 @@ func (c *goalsClient) ListImages(ctx context.Context, in *ListImagesRequest, opt
 	return out, nil
 }
 
-func (c *goalsClient) CompleteWish(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *goalsClient) CompleteGoal(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/CompleteWish", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/CompleteGoal", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -178,7 +178,7 @@ type GoalsServer interface {
 	GetFamilyGoals(context.Context, *GetFamilyGoalsRequest) (*GetFamilyGoalsResponse, error)
 	AddImagesToWish(context.Context, *AddImageToWishRequest) (*emptypb.Empty, error)
 	ListImages(context.Context, *ListImagesRequest) (*WishImageList, error)
-	CompleteWish(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error)
+	CompleteGoal(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error)
 	CheckSorting(context.Context, *GoalSortRequest) (*GoalSortResponse, error)
 	mustEmbedUnimplementedGoalsServer()
 }
@@ -220,8 +220,8 @@ func (UnimplementedGoalsServer) AddImagesToWish(context.Context, *AddImageToWish
 func (UnimplementedGoalsServer) ListImages(context.Context, *ListImagesRequest) (*WishImageList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListImages not implemented")
 }
-func (UnimplementedGoalsServer) CompleteWish(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CompleteWish not implemented")
+func (UnimplementedGoalsServer) CompleteGoal(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompleteGoal not implemented")
 }
 func (UnimplementedGoalsServer) CheckSorting(context.Context, *GoalSortRequest) (*GoalSortResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckSorting not implemented")
@@ -437,20 +437,20 @@ func _Goals_ListImages_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Goals_CompleteWish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Goals_CompleteGoal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CompleteGoalRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GoalsServer).CompleteWish(ctx, in)
+		return srv.(GoalsServer).CompleteGoal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/kifi.goals.service.v1.Goals/CompleteWish",
+		FullMethod: "/kifi.goals.service.v1.Goals/CompleteGoal",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoalsServer).CompleteWish(ctx, req.(*CompleteGoalRequest))
+		return srv.(GoalsServer).CompleteGoal(ctx, req.(*CompleteGoalRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -525,8 +525,8 @@ var Goals_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Goals_ListImages_Handler,
 		},
 		{
-			MethodName: "CompleteWish",
-			Handler:    _Goals_CompleteWish_Handler,
+			MethodName: "CompleteGoal",
+			Handler:    _Goals_CompleteGoal_Handler,
 		},
 		{
 			MethodName: "CheckSorting",
