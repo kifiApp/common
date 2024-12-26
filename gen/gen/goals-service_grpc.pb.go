@@ -31,6 +31,7 @@ type GoalsClient interface {
 	GetGoalByID(ctx context.Context, in *GetGoalByIDRequest, opts ...grpc.CallOption) (*Goal, error)
 	GetWishByID(ctx context.Context, in *GetWishByIDRequest, opts ...grpc.CallOption) (*Wish, error)
 	GetFamilyWishes(ctx context.Context, in *GetFamilyWishesRequest, opts ...grpc.CallOption) (*GetFamilyWishesResponse, error)
+	GetFamilyGoals(ctx context.Context, in *GetFamilyGoalsRequest, opts ...grpc.CallOption) (*GetFamilyGoalsResponse, error)
 	AddImagesToWish(ctx context.Context, in *AddImageToWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListImages(ctx context.Context, in *ListImagesRequest, opts ...grpc.CallOption) (*WishImageList, error)
 	CompleteWish(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -117,6 +118,15 @@ func (c *goalsClient) GetFamilyWishes(ctx context.Context, in *GetFamilyWishesRe
 	return out, nil
 }
 
+func (c *goalsClient) GetFamilyGoals(ctx context.Context, in *GetFamilyGoalsRequest, opts ...grpc.CallOption) (*GetFamilyGoalsResponse, error) {
+	out := new(GetFamilyGoalsResponse)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/GetFamilyGoals", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *goalsClient) AddImagesToWish(ctx context.Context, in *AddImageToWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/AddImagesToWish", in, out, opts...)
@@ -165,6 +175,7 @@ type GoalsServer interface {
 	GetGoalByID(context.Context, *GetGoalByIDRequest) (*Goal, error)
 	GetWishByID(context.Context, *GetWishByIDRequest) (*Wish, error)
 	GetFamilyWishes(context.Context, *GetFamilyWishesRequest) (*GetFamilyWishesResponse, error)
+	GetFamilyGoals(context.Context, *GetFamilyGoalsRequest) (*GetFamilyGoalsResponse, error)
 	AddImagesToWish(context.Context, *AddImageToWishRequest) (*emptypb.Empty, error)
 	ListImages(context.Context, *ListImagesRequest) (*WishImageList, error)
 	CompleteWish(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error)
@@ -199,6 +210,9 @@ func (UnimplementedGoalsServer) GetWishByID(context.Context, *GetWishByIDRequest
 }
 func (UnimplementedGoalsServer) GetFamilyWishes(context.Context, *GetFamilyWishesRequest) (*GetFamilyWishesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFamilyWishes not implemented")
+}
+func (UnimplementedGoalsServer) GetFamilyGoals(context.Context, *GetFamilyGoalsRequest) (*GetFamilyGoalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFamilyGoals not implemented")
 }
 func (UnimplementedGoalsServer) AddImagesToWish(context.Context, *AddImageToWishRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddImagesToWish not implemented")
@@ -369,6 +383,24 @@ func _Goals_GetFamilyWishes_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Goals_GetFamilyGoals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFamilyGoalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).GetFamilyGoals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/GetFamilyGoals",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).GetFamilyGoals(ctx, req.(*GetFamilyGoalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Goals_AddImagesToWish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddImageToWishRequest)
 	if err := dec(in); err != nil {
@@ -479,6 +511,10 @@ var Goals_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFamilyWishes",
 			Handler:    _Goals_GetFamilyWishes_Handler,
+		},
+		{
+			MethodName: "GetFamilyGoals",
+			Handler:    _Goals_GetFamilyGoals_Handler,
 		},
 		{
 			MethodName: "AddImagesToWish",

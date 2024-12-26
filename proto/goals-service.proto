@@ -8,7 +8,7 @@ package kifi.goals.service.v1;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
-import "wishes.proto";
+import "goals.proto";
 
 
 message CreateWishRequest {
@@ -67,9 +67,19 @@ message GetFamilyWishesRequest {
   int64 familyId = 2;
 }
 
+message GetFamilyGoalsRequest {
+  int64 userId = 1;
+  int64 familyId = 2;
+}
+
 message GetFamilyWishesResponse {
   int64 familyId = 1;
   repeated kifi.goals.Wish wishes = 2;
+}
+
+message GetFamilyGoalsResponse {
+  int64 familyId = 1;
+  repeated kifi.goals.Goal goals = 2;
 }
 
 message AddImageToWishRequest {
@@ -106,6 +116,7 @@ service Goals{
   rpc GetGoalByID(GetGoalByIDRequest) returns (kifi.goals.Goal);
   rpc GetWishByID(GetWishByIDRequest) returns (kifi.goals.Wish);
   rpc GetFamilyWishes(GetFamilyWishesRequest) returns (GetFamilyWishesResponse);
+  rpc GetFamilyGoals(GetFamilyGoalsRequest) returns (GetFamilyGoalsResponse);
   rpc AddImagesToWish(AddImageToWishRequest) returns (google.protobuf.Empty);
   rpc ListImages(ListImagesRequest) returns (kifi.goals.WishImageList);
   rpc CompleteWish(CompleteGoalRequest) returns (google.protobuf.Empty);
