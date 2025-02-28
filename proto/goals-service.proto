@@ -30,8 +30,9 @@ message CreateGoalResponse{
 }
 
 message MakeWishAsGoalRequest{
-  int64 wishId = 1;
-  kifi.goals.Goal goal = 2;
+  kifi.goals.Wish wishObj = 1;
+  string price = 2;
+  google.protobuf.Timestamp deadline = 3;
 }
 
 message MakeWishAsGoalResponse{
