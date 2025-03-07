@@ -46,12 +46,15 @@ message Goal{
   int64 id = 1;
   Wish wish = 2;
   int64 notificationDuration = 3;
-  string collectedAmount = 4;
-  bool isCompleted = 5;
-  int32 priority = 6;
-  google.protobuf.Timestamp deadline = 7;
-  google.protobuf.Timestamp created_at = 8;
-  google.protobuf.Timestamp updated_at = 9;
+  string targetPrice = 4;
+  string plannedPayment =5;
+  string paymentPeriod = 6;
+  string collectedAmount = 7;
+  bool isCompleted = 8;
+  int32 priority = 9;
+  google.protobuf.Timestamp deadline = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
 }
 
 message GoalList{
