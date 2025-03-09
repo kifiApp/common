@@ -20,12 +20,28 @@ message CreateWishResponse {
   int64 wishID = 1;
 }
 
+message UpdateWishRequest{
+  kifi.goals.Wish wish = 1;
+}
+
+message DeleteWishRequest{
+  int64 wishID = 1;
+}
+
 message CreateGoalRequest{
   int64 userId = 1;
   kifi.goals.Goal goal = 2;
 }
 
 message CreateGoalResponse{
+  int64 goalID = 1;
+}
+
+message UpdateGoalRequest{
+  kifi.goals.Goal goal = 1;
+}
+
+message DeleteGoalRequest{
   int64 goalID = 1;
 }
 
@@ -110,7 +126,11 @@ message GoalSortResponse{
 
 service Goals{
   rpc CreateWish(CreateWishRequest) returns (CreateWishResponse);
+  rpc UpdateWish(UpdateWishRequest) returns (google.protobuf.Empty);
+  rpc DeleteWish(DeleteWishRequest) returns (google.protobuf.Empty);
   rpc CreateGoal(CreateGoalRequest) returns (CreateGoalResponse);
+  rpc UpdateGoal(UpdateGoalRequest) returns (google.protobuf.Empty);
+  rpc DeleteGoal(DeleteGoalRequest) returns (google.protobuf.Empty);
   rpc MakeGoalFromWish(MakeWishAsGoalRequest) returns (MakeWishAsGoalResponse);
   rpc GetUserWishes(GetUserWishesRequest) returns (GetUserWishesResponse);
   rpc GetUserGoals(GetUserGoalsRequest) returns (GetUserGoalsResponse);
