@@ -52,9 +52,10 @@ message Goal{
   string collectedAmount = 7;
   bool isCompleted = 8;
   int32 priority = 9;
-  google.protobuf.Timestamp deadline = 10;
-  google.protobuf.Timestamp created_at = 11;
-  google.protobuf.Timestamp updated_at = 12;
+  double progress = 10;
+  google.protobuf.Timestamp deadline = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
 }
 
 message GoalList{
