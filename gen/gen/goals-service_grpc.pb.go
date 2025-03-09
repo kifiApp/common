@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GoalsClient interface {
 	CreateWish(ctx context.Context, in *CreateWishRequest, opts ...grpc.CallOption) (*CreateWishResponse, error)
+	UpdateWish(ctx context.Context, in *UpdateWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteWish(ctx context.Context, in *DeleteWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateGoal(ctx context.Context, in *CreateGoalRequest, opts ...grpc.CallOption) (*CreateGoalResponse, error)
 	UpdateGoal(ctx context.Context, in *UpdateGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteGoal(ctx context.Context, in *DeleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -51,6 +53,24 @@ func NewGoalsClient(cc grpc.ClientConnInterface) GoalsClient {
 func (c *goalsClient) CreateWish(ctx context.Context, in *CreateWishRequest, opts ...grpc.CallOption) (*CreateWishResponse, error) {
 	out := new(CreateWishResponse)
 	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/CreateWish", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goalsClient) UpdateWish(ctx context.Context, in *UpdateWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/UpdateWish", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goalsClient) DeleteWish(ctx context.Context, in *DeleteWishRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/DeleteWish", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -188,6 +208,8 @@ func (c *goalsClient) CheckSorting(ctx context.Context, in *GoalSortRequest, opt
 // for forward compatibility
 type GoalsServer interface {
 	CreateWish(context.Context, *CreateWishRequest) (*CreateWishResponse, error)
+	UpdateWish(context.Context, *UpdateWishRequest) (*emptypb.Empty, error)
+	DeleteWish(context.Context, *DeleteWishRequest) (*emptypb.Empty, error)
 	CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error)
 	UpdateGoal(context.Context, *UpdateGoalRequest) (*emptypb.Empty, error)
 	DeleteGoal(context.Context, *DeleteGoalRequest) (*emptypb.Empty, error)
@@ -211,6 +233,12 @@ type UnimplementedGoalsServer struct {
 
 func (UnimplementedGoalsServer) CreateWish(context.Context, *CreateWishRequest) (*CreateWishResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateWish not implemented")
+}
+func (UnimplementedGoalsServer) UpdateWish(context.Context, *UpdateWishRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateWish not implemented")
+}
+func (UnimplementedGoalsServer) DeleteWish(context.Context, *DeleteWishRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteWish not implemented")
 }
 func (UnimplementedGoalsServer) CreateGoal(context.Context, *CreateGoalRequest) (*CreateGoalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateGoal not implemented")
@@ -281,6 +309,42 @@ func _Goals_CreateWish_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GoalsServer).CreateWish(ctx, req.(*CreateWishRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goals_UpdateWish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateWishRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).UpdateWish(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/UpdateWish",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).UpdateWish(ctx, req.(*UpdateWishRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Goals_DeleteWish_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteWishRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).DeleteWish(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/DeleteWish",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).DeleteWish(ctx, req.(*DeleteWishRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -547,6 +611,14 @@ var Goals_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateWish",
 			Handler:    _Goals_CreateWish_Handler,
+		},
+		{
+			MethodName: "UpdateWish",
+			Handler:    _Goals_UpdateWish_Handler,
+		},
+		{
+			MethodName: "DeleteWish",
+			Handler:    _Goals_DeleteWish_Handler,
 		},
 		{
 			MethodName: "CreateGoal",
