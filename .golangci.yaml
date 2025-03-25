@@ -16,8 +16,6 @@ linters-settings:
       - rangeValCopy
   gocyclo:
     min-complexity: 30
-  goimports:
-    local-prefixes: github.com/golangci/golangci-lint
   golint:
     min-confidence: 0
   gosec:
@@ -40,7 +38,7 @@ linters:
     - gocritic          # The most opinionated Go source code linter
     - gocyclo           # Computes and checks the cyclomatic complexity of functions
     - gofmt             # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
-    - goimports         # Goimports does everything that gofmt does. Additionally it checks unused imports
+   # - goimports         # Goimports does everything that gofmt does. Additionally it checks unused imports
     - gosec             # (gas): Inspects source code for security problems
     - gosimple          # Linter for Go source code that specializes in simplifying a code
     - govet             # (vet, vetshadow): Vet examines Go source code and reports suspicious constructs
