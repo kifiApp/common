@@ -16,7 +16,7 @@ message UserAccountsRequest {
 
 message UserAccountsResponse {
   kifi.accounts.UserAccountList userAccounts = 1;
-  int32 total_number = 2;
+  int64 total_number = 2;
   string total_balance = 3;
 }
 
