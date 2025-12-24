@@ -40,6 +40,7 @@ type GoalsClient interface {
 	ListImages(ctx context.Context, in *ListImagesRequest, opts ...grpc.CallOption) (*WishImageList, error)
 	CompleteGoal(ctx context.Context, in *CompleteGoalRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CheckSorting(ctx context.Context, in *GoalSortRequest, opts ...grpc.CallOption) (*GoalSortResponse, error)
+	UpdateCollectedAmount(ctx context.Context, in *CollectedAmountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type goalsClient struct {
@@ -203,6 +204,15 @@ func (c *goalsClient) CheckSorting(ctx context.Context, in *GoalSortRequest, opt
 	return out, nil
 }
 
+func (c *goalsClient) UpdateCollectedAmount(ctx context.Context, in *CollectedAmountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/kifi.goals.service.v1.Goals/UpdateCollectedAmount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GoalsServer is the server API for Goals service.
 // All implementations must embed UnimplementedGoalsServer
 // for forward compatibility
@@ -224,6 +234,7 @@ type GoalsServer interface {
 	ListImages(context.Context, *ListImagesRequest) (*WishImageList, error)
 	CompleteGoal(context.Context, *CompleteGoalRequest) (*emptypb.Empty, error)
 	CheckSorting(context.Context, *GoalSortRequest) (*GoalSortResponse, error)
+	UpdateCollectedAmount(context.Context, *CollectedAmountRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedGoalsServer()
 }
 
@@ -281,6 +292,9 @@ func (UnimplementedGoalsServer) CompleteGoal(context.Context, *CompleteGoalReque
 }
 func (UnimplementedGoalsServer) CheckSorting(context.Context, *GoalSortRequest) (*GoalSortResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckSorting not implemented")
+}
+func (UnimplementedGoalsServer) UpdateCollectedAmount(context.Context, *CollectedAmountRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCollectedAmount not implemented")
 }
 func (UnimplementedGoalsServer) mustEmbedUnimplementedGoalsServer() {}
 
@@ -601,6 +615,24 @@ func _Goals_CheckSorting_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Goals_UpdateCollectedAmount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CollectedAmountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoalsServer).UpdateCollectedAmount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/kifi.goals.service.v1.Goals/UpdateCollectedAmount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoalsServer).UpdateCollectedAmount(ctx, req.(*CollectedAmountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Goals_ServiceDesc is the grpc.ServiceDesc for Goals service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -675,6 +707,10 @@ var Goals_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckSorting",
 			Handler:    _Goals_CheckSorting_Handler,
+		},
+		{
+			MethodName: "UpdateCollectedAmount",
+			Handler:    _Goals_UpdateCollectedAmount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -123,6 +123,11 @@ message GoalSortResponse{
   int32 priority = 1;
 }
 
+message CollectedAmountRequest{
+  int64 goalId = 1;
+  string collectedAmount = 2;
+}
+
 
 service Goals{
   rpc CreateWish(CreateWishRequest) returns (CreateWishResponse);
@@ -142,4 +147,5 @@ service Goals{
   rpc ListImages(ListImagesRequest) returns (kifi.goals.WishImageList);
   rpc CompleteGoal(CompleteGoalRequest) returns (google.protobuf.Empty);
   rpc CheckSorting(GoalSortRequest) returns (GoalSortResponse);
+  rpc UpdateCollectedAmount(CollectedAmountRequest) returns (google.protobuf.Empty);
 }
