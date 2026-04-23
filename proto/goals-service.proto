@@ -52,7 +52,7 @@ message MakeWishAsGoalRequest{
 }
 
 message MakeWishAsGoalResponse{
-  int64 goalID = 1;
+  kifi.goals.Goal goal = 1;
 }
 
 message GetUserWishesRequest {
