@@ -46,7 +46,7 @@ message DeleteGoalRequest{
 }
 
 message MakeWishAsGoalRequest{
-  kifi.goals.Wish wishObj = 1;
+  int64 id = 1;
   string price = 2;
   google.protobuf.Timestamp deadline = 3;
 }
