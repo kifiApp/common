@@ -49,6 +49,7 @@ message MakeWishAsGoalRequest{
   int64 id = 1;
   string price = 2;
   google.protobuf.Timestamp deadline = 3;
+  string budget = 4;
 }
 
 message MakeWishAsGoalResponse{
