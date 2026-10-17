@@ -96,6 +96,7 @@ message AuthResponse {
 
 message RefreshTokenRequest {
   string tokenUUID = 1;
+  string refresh_token = 2;
 }
 
 message RefreshTokenResponse {
@@ -179,7 +180,6 @@ service Users {
   rpc GetUserDevice(GetUserDevicesRequest) returns (UserDevice);
   rpc UpdateUserDevice(UpdateUserDeviceRequest) returns (google.protobuf.Empty);
 }
-
 
 
 
