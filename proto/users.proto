@@ -75,6 +75,8 @@ message UserSignupResponse {
 message UserLoginRequest {
   string Username = 1;
   bytes password = 2;
+  bool enable_biometric = 3;
+  string public_key_jwk = 4;
 }
 
 message UserLoginResponse {
@@ -177,7 +179,6 @@ service Users {
   rpc GetUserDevice(GetUserDevicesRequest) returns (UserDevice);
   rpc UpdateUserDevice(UpdateUserDeviceRequest) returns (google.protobuf.Empty);
 }
-
 
 
 
